@@ -52,7 +52,7 @@ let query2 = (sql, values) => {
 }
 
 //数据库创建语句
-let xxblog = 'create database if not exists xxblog default charset utf8 collate utf8_general_ci;'
+let reblog = 'create database if not exists reblog default charset utf8 collate utf8_general_ci;'
 
 //创建数据库
 let createDatabase = (db) => {
@@ -185,7 +185,7 @@ const createTable = (sql) => {
 
 //先创建数据库再创建表
 async function create() {
-  await createDatabase(xxblog);
+  await createDatabase(reblog);
   createTable(users);
   createTable(subset);
   createTable(file);
