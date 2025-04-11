@@ -53,5 +53,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
-
+//再路由请求之前
+router.beforeEach((to,from,next)=>{
+  if(to.matched.length===0){
+    //地址错误发生跳转
+    from.name?next({
+      name:from.name
+    }):next('/errorinfo')
+  }else{
+    next();
+  }
+})
 export default router;
