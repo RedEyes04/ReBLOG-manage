@@ -5,7 +5,7 @@
       <reply v-for="item in messages" :key="item.id" :content="item" @delete="deleteMessage" :isComment="false" />
     </yk-space>
     <template #footer>
-      <yk-pagination :total="count" simple @change="changePage"></yk-pagination>
+      <yk-pagination :total="count" simple @change="changePage" :default-page-size="props.pageSize"></yk-pagination>
     </template>
   </yk-drawer>
 </template>
