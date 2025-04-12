@@ -26,7 +26,7 @@ import router from "../../router";
 import { isRegisterApi } from "../../api"
 import { useCode } from "../../hooks/code";
 import { useUserStore } from "../../store/user";
-import { noreadMesssageApi } from "../../api";
+import { noreadMessageApi } from "../../api";
 const userStore = useUserStore()
 const active = ref<boolean>(false)
 const backHome = () => {
@@ -57,25 +57,28 @@ const isLogin = () => {
 }
 
 // //获取私信未读数
-// const isread =ref(true)
+// const isread =ref(false)
 // const noreadMsg = () => {
 //     let data = {
 //         token:userStore.token
 //     }
-//     noreadMesssageApi(data).then((res: any) => {
+//     noreadMessageApi(data).then((res: any) => {
         
-        
-//             if(res.data >= 0){
+//         if (tackleCode(res.code)) {
+//             if(res.data>=0){
 //                 isread.value = true
 //             }
 //             console.log(res.data)
+
+//         }
             
         
 //     })
 // }
 
 onMounted(() => {
-    isRegister()    
+    isRegister()   
+    // noreadMsg() 
 })
 </script>
 

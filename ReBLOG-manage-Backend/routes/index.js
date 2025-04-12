@@ -52,7 +52,7 @@ module.exports = function (app) {
 //获取私信message
 app.post('/message', (req, res) => {
   if (typeof (req.body.token) != 'undefined') {
-    serve.getMesssage(req, res)
+    serve.getMessage(req, res)
   } else {
     res.send({
       code: 400
@@ -60,10 +60,20 @@ app.post('/message', (req, res) => {
   }
 })
 
-//获取私信未读数量noreadMesssage
-app.post('/noreadMesssage', (req, res) => {
+//获取私信未读数量noreadMessage
+app.post('/noreadMessage', (req, res) => {
   if (typeof (req.body.token) != 'undefined') {
-    serve.noreadMesssage(req, res)
+    serve.noreadMessage(req, res)
+  } else {
+    res.send({
+      code: 400
+    })
+  }
+})
+//删除私信deleteMessage
+app.post('/deleteMessage', (req, res) => {
+  if (typeof (req.body.token) != 'undefined') {
+    serve.deleteMessage(req, res)
   } else {
     res.send({
       code: 400

@@ -2,7 +2,7 @@
   <yk-drawer placement="right" :show="active" @close="closes" :title="'私信' + count">
     <yk-space dir="vertical">
       
-      <reply v-for="item in messages" :key="item.id" :content="item" @delete="deleteComment" :isComment="false" />
+      <reply v-for="item in messages" :key="item.id" :content="item" @delete="deleteMessage" :isComment="false" />
     </yk-space>
     <template #footer>
       <yk-pagination :total="count" simple @change="changePage"></yk-pagination>
@@ -17,7 +17,7 @@ import { onMounted, ref, getCurrentInstance } from "vue"
 import { comment } from "../../mock/data"
 import { useUserStore } from '../../store/user'
 import { useCode } from '../../hooks/code'
-import { messageApi } from "../../api"
+import { messageApi,deleteMessageApi } from "../../api"
 
 const userStore = useUserStore()
 const { tackleCode } = useCode()
@@ -71,18 +71,18 @@ const drwData = (e: boolean) => {
 
 
 
-const deleteComment = (e: number) => {
-  const req = {
+const deleteMessage = (e: number) => {
+  const request = {
     token: userStore.token,
     id: e
   }
-  deleteCommentApi(req).then((res: any) => {
+  deleteMessageApi(request).then((res: any) => {
     if (tackleCode(res.code)) {
-      comments.value = comments.value.filter(item => item.id !== e)
+      messages.value = messages.value.filter(item => item.id !== e)
       proxy.$message({ type: 'primary', message: '删除成功' })
 
       // 补充数据（当页评论少于 pageSize）
-      if (comments.value.length < props.pageSize && count.value > props.pageSize) {
+      if (messages.value.length < props.pageSize && count.value > props.pageSize) {
         drwData(false)
       }
 

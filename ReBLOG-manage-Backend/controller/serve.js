@@ -123,7 +123,7 @@ exports.deleteComment= async (req, res) => {
 
 
 //获取私信
-exports.getMesssage = async (req, res) => {
+exports.getMessage = async (req, res) => {
   let data = req.body;
   let count = -1;
 
@@ -150,7 +150,7 @@ exports.getMesssage = async (req, res) => {
 
 //获取私信未读数
 
-exports.noreadMesssage = async (req, res) => {
+exports.noreadMessage = async (req, res) => {
   await dbModel.messageCount(0).then(async (result) => {  
     res.send({
       code: 200,
@@ -158,7 +158,23 @@ exports.noreadMesssage = async (req, res) => {
     })
   })
 }
-
+exports.deleteMessage = async (req, res) => {
+  let data = req.body;
+  try {
+    const result = await dbModel.deleteMessage(data.id);
+    const count = Array.isArray(result) && result[0] ? result[0].count : 0;
+    res.send({
+      code: 200,
+      data: count
+    });
+  } catch (error) {
+    res.status(500).send({
+      code: 500,
+      msg: '删除失败',
+      error: error.message
+    });
+  }
+}
 
 //获取文章
 exports.getArticle = async (req, res) => {

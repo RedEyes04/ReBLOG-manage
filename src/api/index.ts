@@ -24,7 +24,9 @@ export const deleteCommentApi = (data:object)=>fetch.post('/deleteComment',data)
 export const messageApi = (data:object)=>fetch.post('/message',data)
 
 //获取私信未读数noreadMesssage
-export const noreadMesssageApi = (data:object)=>fetch.post('/noreadMesssage',data)
+export const noreadMessageApi = (data:object)=>fetch.post('/noreadMessage',data)
+//删除私信deleteMessage
+export const deleteMessageApi = (data:object)=>fetch.post('/deleteMessage',data)
 
 
 
