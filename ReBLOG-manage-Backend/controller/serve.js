@@ -38,7 +38,7 @@ exports.insertUser = async (req, res) => {
 //管理员登录
 exports.signin = async (req, res) => {
   let data = req.body;
-  console.log(data)
+  // console.log(data)
 
   await dbModel.signin(data.name).then((result) => {
     if (result.length > 0 && data.psw == result[0].password) {
@@ -75,7 +75,7 @@ exports.getComment = async (req, res) => {
     if (result.length > 0) {
       for (let i = 0; i < result.length; i++) {
         let getArticTitle = await dbModel.getArticleTitle(result[i].article_id)
-        result[i].atricle = {
+        result[i].article = {
           id: result[i].article_id,
           title: getArticTitle[0].title
         }
@@ -440,18 +440,19 @@ exports.deleteFile = async (req, res) => {
 
 //获取数据总览overview
 exports.overview = async (req, res) => {
-  let atricle = await dbModel.articleCount(-1, -1, "", 0)
+  let article = await dbModel.articleCount(-1, -1, "", 0)
   let gallery = await dbModel.articleCount(-1, -1, "", 1)
   let diary = await dbModel.diaryCount('')
-  let file = mkdir.getDirectorySize('data/files')
+  let file = await  mkdir.getDirectorySize('data/files')
+  console.log(file)
   let room = 0;
   if (file < 1024 * 1024) {
-    room = Math.round(file / 1024 * 1000) / 1000 + 'KB'
+    room = Math.round(file / 1024 * 100) / 100 + ' KB'
   } else {
-    room = Math.round(file / 1024 / 1024 * 1000) / 1000 + 'MB'
+    room = Math.round(file / 1024 / 1024 * 100) / 100 + ' MB'
   }
   let data = {
-    atricle: atricle[0].count,
+    article: article[0].count,
     gallery: gallery[0].count,
     diary: diary[0].count,
     file: room

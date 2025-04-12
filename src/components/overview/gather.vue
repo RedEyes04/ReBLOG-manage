@@ -16,8 +16,15 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { overLink } from '../../utils/menu';
-import { overview } from '../../mock/data'
+// import { overview } from '../../mock/data'
 import { useRouter } from 'vue-router';
+import { overviewApi } from '../../api';
+import { useUserStore } from '../../store/user';
+import { useCode } from '../../hooks/code';
+
+const userStore = useUserStore()
+const { tackleCode } = useCode()
+
 
 const router = useRouter()
 
@@ -25,11 +32,22 @@ const gathers = ref(overLink)
 
 //获取数据
 const drawGatherData = () => {
-  let data = overview.data;
-  gathers.value[0].total = data.file
-  gathers.value[1].total = data.article
-  gathers.value[2].total = data.gallery
-  gathers.value[3].total = data.diary
+  // let data = overview.data;
+  let request = {
+    token: userStore.token
+  }
+  overviewApi(request).then((res: any) => {
+    if (tackleCode(res.cdoe)) {
+      //返回数据
+      console.log(res.data)
+      let data = res.data
+      gathers.value[0].total = data.file
+      gathers.value[1].total = data.article
+      gathers.value[2].total = data.gallery
+      gathers.value[3].total = data.diary
+    }
+  })
+
 }
 //跳转到编辑页面
 const editPage = (n: string) => {

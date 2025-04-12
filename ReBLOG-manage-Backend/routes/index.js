@@ -194,7 +194,7 @@ module.exports = function (app) {
   })
 
   //新建文章/图库
-  app.post('/createArticle ', (req, res) => {
+  app.post('/createArticle', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.createArticle(req, res)
     } else {
@@ -205,7 +205,7 @@ module.exports = function (app) {
   })
 
   //获取文章gainArticle
-  app.post('/gainArticle ', (req, res) => {
+  app.post('/gainArticle', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.gainArticle(req, res)
     } else {
@@ -216,7 +216,7 @@ module.exports = function (app) {
   })
 
   //修改文章/图库updateArticle
-  app.post('/updateArticle ', (req, res) => {
+  app.post('/updateArticle', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.updateArticle(req, res)
     } else {
@@ -227,7 +227,7 @@ module.exports = function (app) {
   })
 
   //新建日记createDiary
-  app.post('/createDiary ', (req, res) => {
+  app.post('/createDiary', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.createDiary(req, res)
     } else {
@@ -238,7 +238,7 @@ module.exports = function (app) {
   })
 
   //删除文件deleteFile
-  app.post('/deleteFile ', (req, res) => {
+  app.post('/deleteFile', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.deleteFile(req, res)
     } else {
@@ -249,7 +249,7 @@ module.exports = function (app) {
   })
 
   //获取数据总览overview
-  app.post('/overview ', (req, res) => {
+  app.post('/overview', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.overview(req, res)
     } else {

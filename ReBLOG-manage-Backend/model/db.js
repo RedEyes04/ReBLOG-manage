@@ -4,6 +4,7 @@ const config = require('../config/default')
 //数据库链接
 const connection = mysql.createConnection({
   host: config.database.HOST,
+  port: config.database.PORT, 
   user: config.database.USER,
   password: config.database.PASSWORD,
 })
