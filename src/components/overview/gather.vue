@@ -39,7 +39,7 @@ const drawGatherData = () => {
   overviewApi(request).then((res: any) => {
     if (tackleCode(res.cdoe)) {
       //返回数据
-      console.log(res.data)
+      // console.log(res.data)
       let data = res.data
       gathers.value[0].total = data.file
       gathers.value[1].total = data.article

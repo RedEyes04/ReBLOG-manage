@@ -28,6 +28,50 @@ module.exports = function (app) {
       })
     }
   })
+  //将评论转化为已读/commentIsread
+  app.post('/commentIsread', (req, res) => {
+    if (typeof (req.body.token) != 'undefined') {
+      serve.commentIsread(req, res)
+    } else {
+      res.send({
+        code: 400
+      })
+    }
+  })
+  //删除评论deleteComment
+  app.post('/deleteComment', (req, res) => {
+    if (typeof (req.body.token) != 'undefined') {
+      serve.deleteComment(req, res)
+    } else {
+      res.send({
+        code: 400
+      })
+    }
+  })
+
+//获取私信message
+app.post('/message', (req, res) => {
+  if (typeof (req.body.token) != 'undefined') {
+    serve.getMesssage(req, res)
+  } else {
+    res.send({
+      code: 400
+    })
+  }
+})
+
+//获取私信未读数量noreadMesssage
+app.post('/noreadMesssage', (req, res) => {
+  if (typeof (req.body.token) != 'undefined') {
+    serve.noreadMesssage(req, res)
+  } else {
+    res.send({
+      code: 400
+    })
+  }
+})
+
+
 
   //获取文章
   app.post('/aritcle', (req, res) => {

@@ -1,15 +1,25 @@
 <template>
   <yk-space size="m" class="reply">
-    <yk-avatar img-url="https://bucket.redeyes.top/avater.webp" v-if="isComment"></yk-avatar>
+    <div class="adjust">
+      <yk-badge is-dot :hidden="content?.isread==1">
+         <yk-avatar img-url="avatar.png" v-if="isComment" @click="changeIsread(props.content!.id)">
+
+         </yk-avatar>
+      </yk-badge>
+    </div>
+    
     <yk-space dir="vertical" size="s" class="reply__main">
       <div class="reply__name">
-        <yk-text strong>{{ content?.user.name }}</yk-text>
-        <yk-text type="third" style="font-size: 12px;">{{ content?.moment }}</yk-text>
+        <yk-text strong>{{ content?.user_name }}</yk-text>
+        <yk-text type="third" style="font-size: 12px;">{{ momentl(content?.moment!) }}</yk-text>
       </div>
-      <yk-text type="secondary">{{ content?.comment }}</yk-text>
+      <yk-text type="secondary">{{ content?.content }}</yk-text>
       <yk-space size="s" align="center" v-if="isComment">
-        <yk-tag type="primary">
+        <yk-tag type="primary" v-if="content?.article!.id! > -1">
           {{ content?.article?.title }}
+        </yk-tag>
+        <yk-tag v-else>
+          文章已被删除
         </yk-tag>
         <yk-text type="danger" v-show="content?.complaint! > 0">举报 {{ content?.complaint }}</yk-text>
       </yk-space>
@@ -20,12 +30,18 @@
 
 <script lang="ts" setup>
 import { ReplyProps } from './reply';
+import { momentl } from '../../utils/memont';
 
 const props = withDefaults(defineProps<ReplyProps>(), {
   isComment: true,
 })
+// console.log(props.content)
 
-const emits = defineEmits(["delete"])
+const emits = defineEmits(["delete","isread"],)
+//已读
+const changeIsread = (e:number)=>{
+  emits("isread", e)
+}
 
 //删除
 const deleteReply = (e: number) => {
@@ -66,4 +82,10 @@ const deleteReply = (e: number) => {
     }
   }
 }
+
+.adjust {
+  margin-top: -6px; 
+}
+
+
 </style>

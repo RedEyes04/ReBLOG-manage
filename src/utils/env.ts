@@ -10,7 +10,7 @@ if (nodeEnv === 'development') {
 } else {
   // 正式环境
   baseUrl = 'https://47.100.137.193:3000';
-  baseImgPath = 'https://47.100.137.193:300/files';
+  baseImgPath = 'https://47.100.137.193:3000/files';
 }
 
 export {

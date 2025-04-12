@@ -25,10 +25,16 @@ declare module 'vue' {
     HeadBar: typeof import('./src/components/bar/HeadBar.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCirclePlusOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconCirclePlusOutline']
+    IconCommentOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconCommentOutline']
     IconDeleteOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconDeleteOutline']
+    IconEyeOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconEyeOutline']
+    IconFillOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconFillOutline']
+    IconLikeOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconLikeOutline']
     IconMailOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconMailOutline']
     IconPlusOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconPlusOutline']
+    IconRevokeOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconRevokeOutline']
     IconSearchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSearchOutline']
+    IconSendOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSendOutline']
     IconSettingsOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSettingsOutline']
     IconSwitchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSwitchOutline']
     IconTickMinOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconTickMinOutline']
@@ -65,5 +71,6 @@ declare module 'vue' {
     YkText: typeof import('@yike-design/ui')['YkText']
     YkTheme: typeof import('@yike-design/ui')['YkTheme']
     YkTitle: typeof import('@yike-design/ui')['YkTitle']
+    YkTooltip: typeof import('@yike-design/ui')['YkTooltip']
   }
 }

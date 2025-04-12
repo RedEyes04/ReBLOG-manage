@@ -5,7 +5,7 @@
             <span class="name">ReBLOG管理后台</span>
         </yk-space>
         <yk-space align="center" size="xl">
-            <yk-badge is-dot>
+            <yk-badge is-dot  >
                 <IconMailOutline style="font-size: 20px;" @click="changeActive(true)" />
             </yk-badge>
             <yk-avatar img-url="https://bucket.redeyes.top/avater.webp"></yk-avatar>
@@ -26,6 +26,7 @@ import router from "../../router";
 import { isRegisterApi } from "../../api"
 import { useCode } from "../../hooks/code";
 import { useUserStore } from "../../store/user";
+import { noreadMesssageApi } from "../../api";
 const userStore = useUserStore()
 const active = ref<boolean>(false)
 const backHome = () => {
@@ -54,8 +55,27 @@ const isLogin = () => {
         router.push('/login')
     }
 }
+
+// //获取私信未读数
+// const isread =ref(true)
+// const noreadMsg = () => {
+//     let data = {
+//         token:userStore.token
+//     }
+//     noreadMesssageApi(data).then((res: any) => {
+        
+        
+//             if(res.data >= 0){
+//                 isread.value = true
+//             }
+//             console.log(res.data)
+            
+        
+//     })
+// }
+
 onMounted(() => {
-    isRegister()
+    isRegister()    
 })
 </script>
 

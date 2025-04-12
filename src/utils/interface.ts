@@ -5,14 +5,12 @@ export type ReplyData = {
     id: number;
     title: string;
   };
-  user: {
-    id: string | number;
-    name: string;
-    imgurl: string;
-  };
-  comment: string;//内容
+  user_id:string;
+  user_name:string;
+  content: string;//内容
   moment: string;//时间
   complaint?: number;//举报数
+  isread:number;
 };
 
 //分组 

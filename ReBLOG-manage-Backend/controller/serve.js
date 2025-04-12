@@ -69,15 +69,23 @@ exports.getComment = async (req, res) => {
 
   await dbModel.getCommentPage(data.pageSize, data.nowPage).then(async (result) => {
     if (data.count) {
-      let c = await dbModel.commentCount(-1)
+      let c = await dbModel.commentCount(-1);
       count = c[0].count;
     }
     if (result.length > 0) {
       for (let i = 0; i < result.length; i++) {
-        let getArticTitle = await dbModel.getArticleTitle(result[i].article_id)
-        result[i].article = {
-          id: result[i].article_id,
-          title: getArticTitle[0].title
+        // 获取对应的文章
+        let getArticTitle = await dbModel.getArticleTitle(result[i].article_id);
+
+        if (getArticTitle.length > 0) {
+          result[i].article = {
+            id: result[i].article_id,
+            title: getArticTitle[0].title
+          };
+        } else {
+          result[i].article = {
+            id: -1
+          };
         }
       }
     }
@@ -87,18 +95,41 @@ exports.getComment = async (req, res) => {
         count,
         result
       }
+    });
+  });
+};
+//将评论转化为已读
+exports.commentIsread = async (req, res) => {
+  let data = req.body;
+// console.log(data.id)
+  await dbModel.commentIsread(data.id).then(async(result)=>{
+    res.send({
+      code:200
     })
   })
 }
+//删除评论deleteComment
+exports.deleteComment= async (req, res) => {
+  let data = req.body;
+
+  await dbModel.deleteComment(data.id).then(async(result)=>{
+    res.send({
+      code:200
+    })
+  })
+}
+  
+
+
 
 //获取私信
 exports.getMesssage = async (req, res) => {
   let data = req.body;
   let count = -1;
 
-  await dbModel.getMesssagePage(data.pageSize, data.nowPage).then(async (result) => {
+  await dbModel.getMessagePage(data.pageSize, data.nowPage).then(async (result) => {
     if (data.count) {
-      let c = await dbModel.messageCount()
+      let c = await dbModel.messageCount(1)
       count = c[0].count;
     }
     if (result.length > 0) {
@@ -116,6 +147,18 @@ exports.getMesssage = async (req, res) => {
     })
   })
 }
+
+//获取私信未读数
+
+exports.noreadMesssage = async (req, res) => {
+  await dbModel.messageCount(0).then(async (result) => {  
+    res.send({
+      code: 200,
+      data: result[0].count
+    })
+  })
+}
+
 
 //获取文章
 exports.getArticle = async (req, res) => {
@@ -444,7 +487,7 @@ exports.overview = async (req, res) => {
   let gallery = await dbModel.articleCount(-1, -1, "", 1)
   let diary = await dbModel.diaryCount('')
   let file = await  mkdir.getDirectorySize('data/files')
-  console.log(file)
+  // console.log(file)
   let room = 0;
   if (file < 1024 * 1024) {
     room = Math.round(file / 1024 * 100) / 100 + ' KB'
