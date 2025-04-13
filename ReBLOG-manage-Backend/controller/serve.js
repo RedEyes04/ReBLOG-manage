@@ -295,10 +295,12 @@ exports.subset = async (req, res) => {
 //新建分组
 exports.addSubset = async (req, res) => {
   let data = req.body;
+  // console.log(data.value)
 
-  await dbModel.addSubset(data.value).then(() => {
+  await dbModel.addSubset(data.value).then((result) => {
     res.send({
       code: 200,
+      data:result.insertId
     })
   })
 }

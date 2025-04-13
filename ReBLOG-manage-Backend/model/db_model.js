@@ -306,25 +306,25 @@ exports.deleteFile = (id) => {
 }
 
 
-//添加评论数据
-let addCommentTodatabases = () =>{
-  let time = new Date();
-  let _sql =`INSERT INTO comment(user_id,user_name,article_id,moment,content,complaint) VALUES('114515','REDEYES6','1','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒',6)`
-  db.query2(_sql)  
+// //添加评论数据
+// let addCommentTodatabases = () =>{
+//   let time = new Date();
+//   let _sql =`INSERT INTO comment(user_id,user_name,article_id,moment,content,complaint) VALUES('114515','REDEYES6','1','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒',6)`
+//   db.query2(_sql)  
 
-}
-addCommentTodatabases();
-
-
+// }
+// addCommentTodatabases();
 
 
-let addMessageTodatabases = () =>{
-  let time = new Date();
-  let _sql =`INSERT INTO message(user_id,user_name,moment,content) VALUES('114515','REDEYES04','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒')`
-  db.query2(_sql)  
 
-}
-addMessageTodatabases();
+
+// let addMessageTodatabases = () =>{
+//   let time = new Date();
+//   let _sql =`INSERT INTO message(user_id,user_name,moment,content) VALUES('114515','REDEYES04','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒')`
+//   db.query2(_sql)  
+
+// }
+// addMessageTodatabases();
 
 
 

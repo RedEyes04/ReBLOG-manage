@@ -27,6 +27,9 @@ export const messageApi = (data:object)=>fetch.post('/message',data)
 export const noreadMessageApi = (data:object)=>fetch.post('/noreadMessage',data)
 //删除私信deleteMessage
 export const deleteMessageApi = (data:object)=>fetch.post('/deleteMessage',data)
+//新建分组addSubset
+export const addSubsetApi = (data:object)=>fetch.post('/addSubset',data)
+
 
 
 

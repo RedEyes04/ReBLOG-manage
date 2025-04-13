@@ -1,7 +1,7 @@
 <template>
   <yk-space dir="vertical" style="width:100%;" size="l">
     <TopTitle name="摄影图库" style="margin-bottom:8px" />
-    <subsetVue />
+    <subsetVue :classify="1"/>
     <galleryVue />
   </yk-space>
 </template>

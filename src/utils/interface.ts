@@ -16,7 +16,7 @@ export type ReplyData = {
 //分组 
 export interface SubsetData {
   id: number | string
-  name: string | number
+  subset_name: string | number
   value: number
   moment?: string;
 }

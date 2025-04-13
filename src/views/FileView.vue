@@ -8,7 +8,7 @@
         </yk-space>
       </template>
     </top-title>
-    <subsetVue />
+    <subsetVue :classify="2" />
     <filesVue />
   </yk-space>
 </template>

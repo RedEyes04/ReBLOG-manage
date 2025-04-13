@@ -56,9 +56,10 @@ const changePage = (e: number) => {
 }
 
 const drwData = (e: boolean) => {
-  request.count! = e
+  request.count = e
   messageApi(request).then((res: any) => {
     if (tackleCode(res.code)) {
+      // console.log(res.data)
       if (res.data.count !== -1) {
         count.value = res.data.count
       }

@@ -12,7 +12,7 @@
             <div>
                 <yk-theme style="font-size: 20px;" />
             </div>
-            <yk-button>退出</yk-button>
+            <yk-button @click="logOut">退出</yk-button>
         </yk-space>
         <Information :active="active" @close="changeActive(false)" />
     </div>
@@ -27,6 +27,7 @@ import { isRegisterApi } from "../../api"
 import { useCode } from "../../hooks/code";
 import { useUserStore } from "../../store/user";
 import { noreadMessageApi } from "../../api";
+
 const userStore = useUserStore()
 const active = ref<boolean>(false)
 const backHome = () => {
@@ -75,7 +76,16 @@ const isLogin = () => {
         
 //     })
 // }
-
+//退出
+const logOut = ()=>{
+    userStore.$patch({
+        id:-1,
+        name:'',
+        token:''
+    })
+    router.push('/login')
+    
+}
 onMounted(() => {
     isRegister()   
     // noreadMsg() 

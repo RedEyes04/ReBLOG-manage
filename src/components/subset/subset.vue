@@ -6,7 +6,7 @@
         全部{{ subsetStore.count }}
       </div>
 
-      <div class="subset__menu" v-for="item in state.data" :key="item.id"
+      <div class="subset__menu" v-for="item in state.data" :key="item.id" v-if="props.classify == 0"
         :class="{ 'subset__menu-seledted': selected == item.id + 'state' }" @click="changeOption(item.id, 'state')">
         {{ item.name }}{{ item.value }}
       </div>
@@ -16,7 +16,7 @@
       </div>
       <div class="subset__menu" v-for="item in subsetStore.data" :key="item.id"
         :class="{ 'subset__menu-seledted': selected == item.id + 'subset' }" @click="changeOption(item.id, 'subset')">
-        {{ item.name }}{{ item.value }}
+        {{ item.subset_name }}{{ item.value }}
       </div>
     </yk-space>
     <yk-space style="flex:none">
@@ -49,8 +49,25 @@ import { onMounted, ref, getCurrentInstance } from 'vue';
 import { subset, state } from '../../mock/data';
 import { useSubsetStore } from '../../store/subset';
 import subsetManage from './subset-manage.vue';
+import { watch } from 'vue';
+import { useUserStore } from "../../store/user";
+import { addSubsetApi } from '../../api';
+import { useCode } from '../../hooks/code';
+
+const { tackleCode } = useCode()
+
+const userStore = useUserStore()
+const active = ref<boolean>(false)
+
 
 const emits = defineEmits(['nowSubset'])
+const props = defineProps({
+  classify: {
+    default: -1,
+    type: Number,
+
+  }
+})
 
 //store
 const subsetStore = useSubsetStore();
@@ -80,28 +97,58 @@ const proxy: any = getCurrentInstance()?.proxy
 function cancel() {
   inputValue.value = ""
 }
-//新建分组 
+//新建分组
 function confirm() {
   if (inputValue.value) {
+    let request = {
+      token: userStore.token,
+      value: {
+        moment: new Date(),
+        classify: props.classify,
+        subset_name: inputValue.value
+      }
+    }
     let obj = {
       id: -2,
       name: inputValue.value,
       value: 0
     }
-    subsetStore.data.push(obj)
-    inputValue.value = ""
-    proxy.$message({ type: 'primary', message: '插入完成' })
+
+    // console.log(request)
+    // subsetStore.data.push(obj)
+    addSubsetApi(request).then((res: any) => {
+      if (tackleCode(res.code)) {
+        // console.log(res)
+        let sub= {
+          id:res.data,
+          value:0,
+          subset_name: inputValue.value!
+        }
+        subsetStore.data.push(sub)
+        inputValue.value = ""
+        proxy.$message({ type: 'primary', message: '插入完成' })
+      }
+    })
+
 
   } else {
     proxy.$message({ type: 'warning', message: '请输入' })
   }
 }
 
+
 //管理分组 
 const visible = ref<boolean>(false)
 const showModal = () => {
   visible.value = !visible.value
 }
+watch(
+  () => props.classify,
+  (newVal) => {
+    console.log(newVal)
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   rawSubset();
