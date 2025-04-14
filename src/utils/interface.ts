@@ -5,18 +5,18 @@ export type ReplyData = {
     id: number;
     title: string;
   };
-  user_id:string;
-  user_name:string;
+  user_id: string;
+  user_name: string;
   content: string;//内容
   moment: string;//时间
   complaint?: number;//举报数
-  isread:number;
+  isread: number;
 };
 
 //分组 
 export interface SubsetData {
   id: number | string
-  subset_name: string | number
+  name: string | number
   value: number
   moment?: string;
 }
@@ -24,8 +24,8 @@ export interface SubsetData {
 //标签 
 export interface LabelData {
   id: number | string
-  name: string | number
-  moment?: string;
+  label_name: string | number
+  moment?: Date;
 }
 
 //文件

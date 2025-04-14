@@ -14,7 +14,7 @@ exports.isRegister = async (req, res) => {
     res.send({
       code: code,
     })
-    
+
   })
 }
 
@@ -44,19 +44,19 @@ exports.signin = async (req, res) => {
     if (result.length > 0 && data.psw == result[0].password) {
       let token = jwt.generateToken(data.name)
       let message = {
-        
+
         id: result[0].id,
-        name:data.name,
+        name: data.name,
         token: token
       }
       res.send({
         code: 200,
         data: message,
       })
-    }else{
+    } else {
       res.send({
         code: 400,
-       
+
       })
     }
   })
@@ -101,24 +101,24 @@ exports.getComment = async (req, res) => {
 //将评论转化为已读
 exports.commentIsread = async (req, res) => {
   let data = req.body;
-// console.log(data.id)
-  await dbModel.commentIsread(data.id).then(async(result)=>{
+  // console.log(data.id)
+  await dbModel.commentIsread(data.id).then(async (result) => {
     res.send({
-      code:200
+      code: 200
     })
   })
 }
 //删除评论deleteComment
-exports.deleteComment= async (req, res) => {
+exports.deleteComment = async (req, res) => {
   let data = req.body;
 
-  await dbModel.deleteComment(data.id).then(async(result)=>{
+  await dbModel.deleteComment(data.id).then(async (result) => {
     res.send({
-      code:200
+      code: 200
     })
   })
 }
-  
+
 
 
 
@@ -151,7 +151,7 @@ exports.getMessage = async (req, res) => {
 //获取私信未读数
 
 exports.noreadMessage = async (req, res) => {
-  await dbModel.messageCount(0).then(async (result) => {  
+  await dbModel.messageCount(0).then(async (result) => {
     res.send({
       code: 200,
       data: result[0].count
@@ -255,11 +255,11 @@ exports.subset = async (req, res) => {
 
   await dbModel.getSubset(data.classify).then(async (result) => {
     if (data.classify == 0 || data.classify == 1) {
-      let count = await dbModel.articleCount(-1, -1, "", classify);
+      let count = await dbModel.articleCount(-1, -1, "", data.classify);
       let list = []
       if (result.length > 0) {
         for (let i = 0; i < result.length; i++) {
-          let value = await dbModel.articleCount(-1, result[i].id, "", classify);
+          let value = await dbModel.articleCount(-1, result[i].id, "", data.classify);
           list[i] = {
             id: result[i].id,
             value: value[0].count,
@@ -300,7 +300,7 @@ exports.addSubset = async (req, res) => {
   await dbModel.addSubset(data.value).then((result) => {
     res.send({
       code: 200,
-      data:result.insertId
+      data: result.insertId
     })
   })
 }
@@ -342,9 +342,10 @@ exports.getLabel = async (req, res) => {
 exports.addLabel = async (req, res) => {
   let data = req.body;
 
-  await dbModel.addLabel(data.value).then(() => {
+  await dbModel.addLabel(data.value).then((result) => {
     res.send({
       code: 200,
+      data: result.insertId
     })
   })
 }
@@ -504,7 +505,7 @@ exports.overview = async (req, res) => {
   let article = await dbModel.articleCount(-1, -1, "", 0)
   let gallery = await dbModel.articleCount(-1, -1, "", 1)
   let diary = await dbModel.diaryCount('')
-  let file = await  mkdir.getDirectorySize('data/files')
+  let file = await mkdir.getDirectorySize('data/files')
   // console.log(file)
   let room = 0;
   if (file < 1024 * 1024) {

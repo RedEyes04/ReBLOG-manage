@@ -16,7 +16,7 @@
       </div>
       <div class="subset__menu" v-for="item in subsetStore.data" :key="item.id"
         :class="{ 'subset__menu-seledted': selected == item.id + 'subset' }" @click="changeOption(item.id, 'subset')">
-        {{ item.subset_name }}{{ item.value }}
+        {{ item.name }}{{ item.value }}
       </div>
     </yk-space>
     <yk-space style="flex:none">
@@ -46,13 +46,13 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, getCurrentInstance } from 'vue';
-import { subset, state } from '../../mock/data';
+import { state } from '../../mock/data';
 import { useSubsetStore } from '../../store/subset';
 import subsetManage from './subset-manage.vue';
 import { watch } from 'vue';
 import { useUserStore } from "../../store/user";
-import { addSubsetApi } from '../../api';
 import { useCode } from '../../hooks/code';
+import { subsetApi, addSubsetApi } from '../../api';
 
 const { tackleCode } = useCode()
 
@@ -88,8 +88,18 @@ const changeOption = (id: number | string, type: string) => {
 
 //获取分组 
 const rawSubset = () => {
-  subsetStore.data = subset.data.list
-  subsetStore.count = subset.data.count
+  let request = {
+    token: userStore.token,
+    classify: props.classify
+  }
+  subsetApi(request).then((res: any) => {
+    if (tackleCode(res.code)) {
+      // console.log(res.data)
+      subsetStore.data = res.data.list
+      subsetStore.count = res.data.count
+    }
+  })
+
 }
 
 const proxy: any = getCurrentInstance()?.proxy
@@ -119,10 +129,10 @@ function confirm() {
     addSubsetApi(request).then((res: any) => {
       if (tackleCode(res.code)) {
         // console.log(res)
-        let sub= {
-          id:res.data,
-          value:0,
-          subset_name: inputValue.value!
+        let sub = {
+          id: res.data,
+          value: 0,
+          name: inputValue.value!
         }
         subsetStore.data.push(sub)
         inputValue.value = ""
@@ -142,13 +152,13 @@ const visible = ref<boolean>(false)
 const showModal = () => {
   visible.value = !visible.value
 }
-watch(
-  () => props.classify,
-  (newVal) => {
-    console.log(newVal)
-  },
-  { immediate: true }
-)
+// watch(
+//   () => props.classify,
+//   (newVal) => {
+//     console.log(newVal)
+//   },
+//   { immediate: true }
+// )
 
 onMounted(() => {
   rawSubset();

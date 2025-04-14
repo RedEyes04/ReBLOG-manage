@@ -26,6 +26,15 @@
 <script lang="ts" setup>
 import { getCurrentInstance } from "vue"
 import { useSubsetStore } from '../../store/subset';
+import { useUserStore } from "../../store/user";
+import { useCode } from '../../hooks/code';
+import { updateSubsetApi ,deleteSubsetApi} from '../../api';
+
+const { tackleCode } = useCode()
+
+const userStore = useUserStore()
+
+
 const proxy: any = getCurrentInstance()?.proxy
 
 //store
@@ -38,18 +47,35 @@ const focusSubset = (id: number | string) => {
   let result = subsetStore.data.find((item: { id: number | string }) => item.id === id)
   if (result) { nowName = result.name }
 }
-//失焦
+// 失焦
 const blurSubset = (id: number | string) => {
   let result = subsetStore.data.find((item: { id: number | string }) => item.id === id)
   if (result && nowName != result.name) {
-    //提交后端处理
-    proxy.$message({ type: 'primary', message: '修改成功' })
+    // 发送后端处理
+    let request = {
+      subsetName: result.name,
+      subsetID: result.id,
+      token: userStore.token
+    }
+
+    updateSubsetApi(request).then((res: any) => {
+      if (tackleCode(res.code)) {
+        proxy.$message({ type: 'primary', message: '修改成功' })
+      }
+    })
   }
 }
 
 //删除分组
 const deleteSubset = (e: number | string) => {
-  subsetStore.data = subsetStore.data.filter(
+  let request = {
+      subsetID: e,
+      token: userStore.token
+    }
+
+    deleteSubsetApi(request).then((res: any) => {
+      if (tackleCode(res.code)) {
+        subsetStore.data = subsetStore.data.filter(
     (obj: { value: any; id: number | string }) => {
       if (obj.id === e) {
         subsetStore.exclude.value += obj.value
@@ -58,7 +84,11 @@ const deleteSubset = (e: number | string) => {
     }
   )
   proxy.$message({ type: 'primary', message: '删除成功' })
-}
+      }
+    })
+  }
+  
+
 
 </script>
 
