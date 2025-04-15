@@ -25,8 +25,10 @@ export const messageApi = (data: object) => fetch.post('/message', data)
 
 //获取私信未读数/noreadMesssage
 export const noreadMessageApi = (data: object) => fetch.post('/noreadMessage', data)
+
 //删除私信/deleteMessage
 export const deleteMessageApi = (data: object) => fetch.post('/deleteMessage', data)
+
 //新建分组/addSubset
 export const addSubsetApi = (data: object) => fetch.post('/addSubset', data)
 
@@ -41,10 +43,15 @@ export const deleteSubsetApi = (data: object) => fetch.post('/deleteSubset', dat
 
 //新建标签/addLabel
 export const addLabeltApi = (data: object) => fetch.post('/addLabel', data)
+
 //获取标签/label
 export const labelApi = (data: object) => fetch.post('/label', data)
+
 //删除标签/deleteLabel
 export const deleteLabelApi = (data: object) => fetch.post('/deleteLabel', data)
+
+//新建文章/createArticle
+export const createArticleApi = (data: object) => fetch.post('/createArticle', data)
 
 
 

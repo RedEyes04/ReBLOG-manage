@@ -31,7 +31,7 @@
     </div>
     <yk-modal v-model="visible" title="标签" size="s" :show-footer="false">
       <yk-space dir="vertical" size="l">
-        <yk-input v-model="inputLabel" placeholder="请输入标签会车确定" style="width:280px" @submit="addLabel" />
+        <yk-input v-model="inputValue" placeholder="请输入标签会车确定" style="width:280px" @submit="addLabel" />
         <yk-space size="s">
           <yk-tag v-for="(tag, index) in formData.label" :key="index" closeable shape="round" @close="deleteLabel(tag)">
             {{ tag }}
@@ -51,9 +51,11 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed, watch } from 'vue'
-import { subset, mklabel } from '../../mock/data';
-import { LabelData } from '../../utils/interface';
+import { useSubset } from '../../hooks/subset';
+import { useSubsetStore } from '../../store/subset';
+import { useLabel } from '../../hooks/label';
 
+// props
 const props = defineProps({
   classify: {
     default: 0,
@@ -61,111 +63,104 @@ const props = defineProps({
   }
 })
 
+// emits
 const emits = defineEmits(['formData'])
 
+// 表单数据（含标题、分类、标签、简介等）
 const formData = ref<any>({
   title: "",
   subsetId: undefined,
-  label: [],//标签
-  introduce: '',//简介
+  label: [],         // 标签（字符串数组）
+  introduce: '',     // 简介
   cover: '',
   classify: props.classify,
 })
 
-//简介行数
+// 简介输入框的行数配置（随分类变化）
 const raws = computed(() => {
-  if (props.classify == 1) {
-    return {
-      minRows: 24,
-      maxRows: 30,
-    }
-  } else {
-    return {
-      minRows: 4,
-      maxRows: 10,
-    }
-  }
+  return props.classify === 1
+    ? { minRows: 24, maxRows: 30 }
+    : { minRows: 4, maxRows: 10 }
 })
 
-//分类名称
+// 分类相关
+const subsetStore = useSubsetStore()
+const { rawSubset } = useSubset()
+const subsetList = ref<{ id: string | number; name: string | number; value: number; moment?: string }[]>([])
 const subsetName = ref()
 
-//选择分类
+// 分类选择
 const subsetSelect = (e: number) => {
-  formData.value.subsetId != e
-  for (let i = 0; i < subsetList.value.length; i++) {
-    if (e == subsetList.value[i].id) {
-      subsetName.value = subsetList.value[i].name
-    }
+  formData.value.subsetId = e
+  const selected = subsetList.value.find(item => item.id === e)
+  if (selected) {
+    subsetName.value = selected.name
   }
 }
 
-//获取分类
-const subsetList = ref()
-const getSubset = () => {
-  subsetList.value = subset.data.list
-  console.log(subsetList.value)
-}
+// 标签相关
+const { rawLabel, label, inputValue, confirm } = useLabel()
+const labelArr = ref<any[]>([])           // 所有标签（候选）
+const inputLabel = ref<string | number>() // 输入框的标签值
+const visible = ref<boolean>(false)       // 标签弹窗显隐
 
-//标签
-//所有标签
-const labelData = ref<LabelData[]>([])
-const labelArr = ref<any[]>([])
-const inputLabel = ref<string | number>()
-
-const rawLabel = () => {
-  labelData.value = mklabel.data.list;
-  for (let i = 0; i < labelData.value.length; i++) {
-    labelArr.value.push(labelData.value[i].name)
-  }
-}
-
-//标签弹窗
-const visible = ref<boolean>(false)
+// 打开标签弹窗
 const showLabel = () => {
   visible.value = true
 }
 
-//增加标签
+// 新增标签（最多3个）
 const addLabel = () => {
-  if (inputLabel.value && formData.value.label.length < 3) {
-    formData.value.label.push(inputLabel.value)
-    inputLabel.value = ""
+  if (inputValue.value && formData.value.label.length < 3) {
+    confirm()
+    formData.value.label.push(inputValue.value)
   }
 }
 
-//选择标签
+// 选择标签（从候选区添加到已选标签中）
 const selectLabel = (e: number | string) => {
   if (formData.value.label.length < 3) {
     formData.value.label.push(e)
-    labelArr.value = labelArr.value.filter((obj: number | string) => {
-      return obj != e
-    })
+    labelArr.value = labelArr.value.filter(item => item !== e)
   }
 }
 
-//删除标签
+// 删除标签（从已选中移除并回退到候选区）
 const deleteLabel = (e: number | string) => {
   labelArr.value.unshift(e)
-  formData.value.label = formData.value.label.filter((obj: number | string) => {
-    return obj != e
-  })
+  formData.value.label = formData.value.label.filter(item => item !== e)
 }
 
-//封面
+// 上传相关
 const uploadUrl = ""
 const fileUrl = ref([])
 
+// 初始化分类、标签
+onMounted(() => {
+  rawSubset(props.classify)
+  rawLabel()
+})
+
+// 表单数据变动时向父组件同步
 watch(formData.value, (e) => {
   emits('formData', e)
 })
 
-onMounted(() => {
-  getSubset()
-  rawLabel();
-})
+// 同步分类数据
+watch(() => subsetStore.data, (newVal) => {
+  subsetList.value = newVal
+}, { immediate: true })
 
+// 同步标签数据（将标签对象数组转为字符串数组）
+watch(
+  () => label.value,
+  (e: any[]) => {
+    labelArr.value = Array.isArray(e) ? e.map(item => item.label_name) : []
+  },
+  { immediate: true }
+)
 </script>
+
 
 <style lang="less" scoped>
 .form {

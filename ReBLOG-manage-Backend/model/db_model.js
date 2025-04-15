@@ -68,11 +68,11 @@ exports.getMessagePage = (pageSize, nowPage) => {
 exports.messageCount = (isread) => {
 
   let _sql;
-  if(isread == 0){
-    _sql=`select count(*) as count from message where isread=0;`
+  if (isread == 0) {
+    _sql = `select count(*) as count from message where isread=0;`
 
-  }else{
-    _sql =  `select count(*) as count from message;`
+  } else {
+    _sql = `select count(*) as count from message;`
 
   }
   return db.query2(_sql)
@@ -186,7 +186,7 @@ exports.deleteSubset = (id) => {
 
 //获取标签
 exports.getLabel = () => {
-  let _sql = `select * from label;`
+  let _sql = `select * from label order by id desc;`
   return db.query2(_sql)
 }
 

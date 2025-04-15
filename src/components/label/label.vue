@@ -26,7 +26,7 @@
     </yk-space>
   </div>
   <yk-modal v-model="visible" title="管理分组">
-    <label-manage :label="label" />
+    <label-manage :label="label" @delete-label="deletelabel" />
     <template #footer>
       <yk-button @click="showModal">确定</yk-button>
     </template>
@@ -34,94 +34,23 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, getCurrentInstance } from 'vue';
-// import { mklabel } from '../../mock/data';
-import { LabelData } from '../../utils/interface';
-// import labelManage from './label-manage.vue';
-import { useUserStore } from "../../store/user";
-import { useCode } from '../../hooks/code';
-import { addLabeltApi, labelApi } from '../../api';
+import { onMounted } from 'vue';
+import { useLabel } from '../../hooks/label';
 
-const { tackleCode } = useCode()
+const {
+  inputValue,
+  label,
+  rawLabel,
+  cancel,
+  confirm,
+  showModal,
+  visible,
+  deletelabel
+} = useLabel()
 
-const userStore = useUserStore()
-
-const emits = defineEmits(['nowlabel'])
-
-//新建分组
-function confirm() {
-  if (inputValue.value) {
-    let request = {
-      token: userStore.token,
-      value: {
-        moment: new Date(),
-        label_name: inputValue.value
-      }
-    }
-    let lab = {
-      id: -2,
-      name: inputValue.value,
-      value: 0
-    }
-
-    // console.log(request)
-    // subsetStore.data.push(obj)
-    addLabeltApi(request).then((res: any) => {
-      if (tackleCode(res.code)) {
-        // console.log(res)
-        let lab = {
-          id: res.data,
-          value: 0,
-          label_name: inputValue.value!
-        }
-        label.value.push(lab)
-        inputValue.value = ""
-        proxy.$message({ type: 'primary', message: '插入完成' })
-      }
-    })
-
-
-  } else {
-    proxy.$message({ type: 'warning', message: '请输入' })
-  }
-}
-
-//新建分组内容
-const inputValue = ref<number | string>()
-
-
-
-
-//获取标签
-const label = ref<LabelData[]>([])
-const rawlabel = () => {
-  let request = {
-    token: userStore.token,
-
-  }
-  labelApi(request).then((res: any) => {
-    if (tackleCode(res.code)) {
-
-      label.value = [...res.data]
-
-    }
-  })
-
-}
-
-const proxy: any = getCurrentInstance()?.proxy
-//取消
-function cancel() {
-  inputValue.value = ""
-}
-//管理分组 
-const visible = ref<boolean>(false)
-const showModal = () => {
-  visible.value = !visible.value
-}
 
 onMounted(() => {
-  rawlabel();
+  rawLabel();
 })
 </script>
 

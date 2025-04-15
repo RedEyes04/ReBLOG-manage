@@ -20,7 +20,8 @@
       </div>
     </yk-space>
     <yk-space style="flex:none">
-      <yk-popconfirm title="新建分组" @cancel="cancel" @confirm="confirm" placement="bottom" trigger="click">
+      <yk-popconfirm title="新建分组" @cancel="cancel" @confirm="confirm(props.classify)" placement="bottom"
+        trigger="click">
         <yk-text type="primary">
           <IconCirclePlusOutline style="margin-right: 4px;" />新建
         </yk-text>
@@ -45,19 +46,25 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, getCurrentInstance } from 'vue';
-import { state } from '../../mock/data';
+import { onMounted } from 'vue';
+import { useSubset } from '../../hooks/subset';
 import { useSubsetStore } from '../../store/subset';
+import { state } from '../../mock/data';
+
 import subsetManage from './subset-manage.vue';
-import { watch } from 'vue';
-import { useUserStore } from "../../store/user";
-import { useCode } from '../../hooks/code';
-import { subsetApi, addSubsetApi } from '../../api';
 
-const { tackleCode } = useCode()
+const subsetStore = useSubsetStore()
 
-const userStore = useUserStore()
-const active = ref<boolean>(false)
+
+const { inputValue,
+  selected,
+  changeOption,
+  rawSubset,
+  cancel,
+  confirm,
+  showModal,
+  visible, } = useSubset()
+
 
 
 const emits = defineEmits(['nowSubset'])
@@ -69,99 +76,10 @@ const props = defineProps({
   }
 })
 
-//store
-const subsetStore = useSubsetStore();
 
-//新建分组内容
-const inputValue = ref<number | string>()
-
-//当前选择
-const selected = ref<string>('-1all')
-
-//选择切换 
-const changeOption = (id: number | string, type: string) => {
-  if (id + type != selected.value) {
-    selected.value = id + type
-    emits('nowSubset', { id, type })
-  }
-}
-
-//获取分组 
-const rawSubset = () => {
-  let request = {
-    token: userStore.token,
-    classify: props.classify
-  }
-  subsetApi(request).then((res: any) => {
-    if (tackleCode(res.code)) {
-      // console.log(res.data)
-      subsetStore.data = res.data.list
-      subsetStore.count = res.data.count
-    }
-  })
-
-}
-
-const proxy: any = getCurrentInstance()?.proxy
-//取消
-function cancel() {
-  inputValue.value = ""
-}
-//新建分组
-function confirm() {
-  if (inputValue.value) {
-    let request = {
-      token: userStore.token,
-      value: {
-        moment: new Date(),
-        classify: props.classify,
-        subset_name: inputValue.value
-      }
-    }
-    let obj = {
-      id: -2,
-      name: inputValue.value,
-      value: 0
-    }
-
-    // console.log(request)
-    // subsetStore.data.push(obj)
-    addSubsetApi(request).then((res: any) => {
-      if (tackleCode(res.code)) {
-        // console.log(res)
-        let sub = {
-          id: res.data,
-          value: 0,
-          name: inputValue.value!
-        }
-        subsetStore.data.push(sub)
-        inputValue.value = ""
-        proxy.$message({ type: 'primary', message: '插入完成' })
-      }
-    })
-
-
-  } else {
-    proxy.$message({ type: 'warning', message: '请输入' })
-  }
-}
-
-
-//管理分组 
-const visible = ref<boolean>(false)
-const showModal = () => {
-  visible.value = !visible.value
-}
-// watch(
-//   () => props.classify,
-//   (newVal) => {
-//     console.log(newVal)
-//   },
-//   { immediate: true }
-// )
 
 onMounted(() => {
-  rawSubset();
+  rawSubset(props.classify);
 })
 </script>
 
