@@ -27,7 +27,8 @@
       </div>
     </yk-space>
     <div class="form__cover" v-if="props.classify == 0">
-      <yk-upload :upload-url="uploadUrl" :file-list="fileUrl" :limit="1" accept="image/*" desc="封面800x600"></yk-upload>
+      <yk-upload :upload-url="uploadUrl" :file-list="fileUrl" :limit="1" accept="image/*" desc="封面800x600"
+        @handle-success="handleSuccess"></yk-upload>
     </div>
     <yk-modal v-model="visible" title="标签" size="s" :show-footer="false">
       <yk-space dir="vertical" size="l">
@@ -54,6 +55,11 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { useSubset } from '../../hooks/subset';
 import { useSubsetStore } from '../../store/subset';
 import { useLabel } from '../../hooks/label';
+import { baseImgPath, baseUrl } from '../../utils/env';
+import { useCode } from '../../hooks/code';
+
+
+const { tackleCode } = useCode()
 
 // props
 const props = defineProps({
@@ -132,8 +138,18 @@ const deleteLabel = (e: number | string) => {
 }
 
 // 上传相关
-const uploadUrl = ""
-const fileUrl = ref([])
+const uploadUrl = `${baseUrl}/upload`
+const fileUrl = ref<{ name: string, url: string }[]>([])
+
+//图片提交成功
+const handleSuccess = (res: any) => {
+  if (tackleCode(res.code)) {
+    let photoUrl = { name: res.data.file_name, url: baseImgPath + '/' + res.data.url }
+    fileUrl.value.push(photoUrl)
+    formData.value.code = res.data.url
+  }
+  console.log(e)
+}
 
 // 初始化分类、标签
 onMounted(() => {

@@ -53,6 +53,9 @@ export const deleteLabelApi = (data: object) => fetch.post('/deleteLabel', data)
 //新建文章/createArticle
 export const createArticleApi = (data: object) => fetch.post('/createArticle', data)
 
+//上传文件upload
+export const uploadApi = (data: object) => fetch.post('/upload', data)
+
 
 
 
