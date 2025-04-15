@@ -435,17 +435,22 @@ exports.deleteDiary = async (req, res) => {
 
 //新建文章/图库
 exports.createArticle = async (req, res) => {
-  let data = req.body;
-  await dbModel.createArticle(data.value).then(() => {
+  let data = req.body.value;
+  if (data.label) {
+    data.label = data.label.join(',')
+  }
+
+  await dbModel.createArticle(data).then(() => {
     res.send({
       code: 200,
     })
   })
+
 }
 
 //获取文章gainArticle
 exports.gainArticle = async (req, res) => {
-  let data = req.body;
+  let data = req.body.value;
   await dbModel.gainArticle(data.id).then((result) => {
     res.send({
       code: 200,

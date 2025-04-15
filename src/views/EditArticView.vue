@@ -3,7 +3,7 @@
     <div class="eidt-gallery__topbar">
       <p class="eidt-gallery__topbar--title">新建博客文章</p>
       <yk-space align="center">
-        <yk-text type="secondary">{{ nowMoment }} 保存</yk-text>
+        <yk-text type="secondary" v-show="nowMoment">{{ nowMoment }} 保存</yk-text>
         <yk-button type="secondary" @click="submit(0)">保存</yk-button>
         <yk-button @click="submit(1)">发布</yk-button>
       </yk-space>
@@ -15,49 +15,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, getCurrentInstance } from 'vue'
 import editor from "../components/editor/editor.vue";
 import forms from '../components/forms/forms.vue';
-import { time } from '../utils/memont'
+import { useArticle } from '../hooks/article';
 
-const proxy: any = getCurrentInstance()?.proxy
-
-const articleData = ref()
-//收取form内容
-const form = ref()
-const formData = (e: any) => {
-  form.value = e
-}
-//收取editor内容
-const editors = ref()
-const editorData = (e: any) => {
-  // console.log(e)
-  editors.value = e
-}
-
-//发布
-const nowMoment = ref()
-const submit = (e: number) => {
-  if (form.value && form.value.title) {
-    if (e == 0) {
-      let nowTime = new Date();
-      nowMoment.value = time(nowTime)
-    }
-    let request = {
-      ...form.value,
-      ...{
-        content: editors.value,
-        state: e,
-        classify: 0,
-        moment: new Date(),
-      }
-    }
-    console.log(request)
-  } else {
-    proxy.$message({ type: 'warning', message: '请输入标题' })
-  }
-
-}
+const { formData, editorData, submit, nowMoment } = useArticle()
 
 </script>
 

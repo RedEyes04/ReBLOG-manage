@@ -75,7 +75,7 @@ const emits = defineEmits(['formData'])
 // 表单数据（含标题、分类、标签、简介等）
 const formData = ref<any>({
   title: "",
-  subsetId: undefined,
+  subset_id: undefined,
   label: [],         // 标签（字符串数组）
   introduce: '',     // 简介
   cover: '',
@@ -97,7 +97,7 @@ const subsetName = ref()
 
 // 分类选择
 const subsetSelect = (e: number) => {
-  formData.value.subsetId = e
+  formData.value.subset_id! = e
   const selected = subsetList.value.find(item => item.id === e)
   if (selected) {
     subsetName.value = selected.name
@@ -146,9 +146,9 @@ const handleSuccess = (res: any) => {
   if (tackleCode(res.code)) {
     let photoUrl = { name: res.data.file_name, url: baseImgPath + '/' + res.data.url }
     fileUrl.value.push(photoUrl)
-    formData.value.code = res.data.url
+    formData.value.cover = res.data.url
   }
-  console.log(e)
+  // console.log(e)
 }
 
 // 初始化分类、标签
@@ -237,6 +237,11 @@ watch(
   }
 
   .yk-upload-picture {
+    width: 160px;
+    height: 120px;
+  }
+
+  .yk-upload__picture {
     width: 160px;
     height: 120px;
   }

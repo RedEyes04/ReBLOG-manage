@@ -4,7 +4,6 @@ import { LabelData } from '../utils/interface';
 import { useUserStore } from "../store/user";
 import { useCode } from '../hooks/code';
 import { addLabeltApi, labelApi, deleteLabelApi } from '../api';
-import { emit } from 'process';
 
 const { tackleCode } = useCode()
 const label = ref<LabelData[]>([])
