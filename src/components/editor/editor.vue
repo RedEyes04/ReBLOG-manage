@@ -16,6 +16,7 @@ import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import { colors } from "./colors"
+import {uploadApi} from "../../api/index"
 
 const emits = defineEmits('editors')
 
@@ -94,12 +95,11 @@ const editorConfig: Partial<IEditorConfig> = {  // TS 语法
     uploadImage: {
       async customUpload(file: File, insertFn: InsertFnType) {
 
-        // const formData=new FormData()
-        // formData.append('file','cover')
-        // formData.append('id','abcdefg')
-        // uploadApi(formData).then(()=>{
+        const formData=new FormData()
+        formData.append('file','file')
+        uploadApi(formData).then(()=>{
 
-        // })
+        })
         insertFn(url, alt, href)
       }
     }

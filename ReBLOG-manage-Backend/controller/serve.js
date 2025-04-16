@@ -11,6 +11,7 @@ exports.isRegister = async (req, res) => {
       //已注册
       code = 200
     }
+    
     res.send({
       code: code,
     })
