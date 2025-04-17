@@ -94,7 +94,7 @@ exports.getArticlePage = (pageSize, nowPage, state, subsetId, serchTerm, classif
   } else if (typeof subsetId == 'string') {
     _sql = `select * from article where subset_id not in ("${subsetId}") and classify="${classify}" order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   } else if (state > -1) {
-    _sql = `select * from article where seate="${state}" and classify=0  order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
+    _sql = `select * from article where state="${state}" and classify=0  order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   } else {
     _sql = `select * from article where classify="${classify}" order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   }
@@ -111,7 +111,7 @@ exports.articleCount = (state, subsetId, serchTerm, classify) => {
   } else if (typeof subsetId == 'string') {
     _sql = `select count(*) as count from article where subset_id not in ("${subsetId}") and classify="${classify}";`
   } else if (state > -1) {
-    _sql = `select count(*) as count from article where seate="${state}" and classify=0;`
+    _sql = `select count(*) as count from article where state="${state}" and classify=0;`
   } else {
     _sql = `select count(*) as count from article where classify="${classify}";`
   }
@@ -310,7 +310,7 @@ exports.deleteFile = (id) => {
 // let addCommentTodatabases = () =>{
 //   let time = new Date();
 //   let _sql =`INSERT INTO comment(user_id,user_name,article_id,moment,content,complaint) VALUES('114515','REDEYES6','1','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒',6)`
-//   db.query2(_sql)  
+//   db.query2(_sql)
 
 // }
 // addCommentTodatabases();
@@ -321,7 +321,7 @@ exports.deleteFile = (id) => {
 // let addMessageTodatabases = () =>{
 //   let time = new Date();
 //   let _sql =`INSERT INTO message(user_id,user_name,moment,content) VALUES('114515','REDEYES04','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒')`
-//   db.query2(_sql)  
+//   db.query2(_sql)
 
 // }
 // addMessageTodatabases();
@@ -338,4 +338,3 @@ exports.deleteFile = (id) => {
 //    isread INT DEFAULT 0 COMMENT '是否已读',
 //    PRIMARY KEY ( id )
 //   );`
-

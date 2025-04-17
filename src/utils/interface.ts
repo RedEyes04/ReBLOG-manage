@@ -42,7 +42,7 @@ export interface FileData {
 export interface ArticleDate {
   id: number;
   title: string;
-  subsetId?: number;
+  subset_id?: number;
   moment: Date;//时间
   label?: string[];
   introduce?: string;//简介 

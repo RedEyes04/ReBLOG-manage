@@ -11,7 +11,7 @@ exports.isRegister = async (req, res) => {
       //已注册
       code = 200
     }
-    
+
     res.send({
       code: code,
     })
@@ -237,10 +237,12 @@ exports.articleState = async (req, res) => {
   let publish = await dbModel.articleCount(1, -1, "", 0)
   let message = [
     {
+      name: '未发布',
       id: 0,
       value: unpublish[0].count,
     }, {
       id: 1,
+      name: '已发布',
       value: publish[0].count,
     }
   ]

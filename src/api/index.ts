@@ -56,6 +56,22 @@ export const createArticleApi = (data: object) => fetch.post('/createArticle', d
 //上传文件upload
 export const uploadApi = (data: object) => fetch.post('/upload', data)
 
+//更新文章/updateArticle
+export const updateArticleApi = (data: object) => fetch.post('/updateArticle', data)
+
+//获取文章aritcle
+export const aritcleApi = (data: object) => fetch.post('/aritcle', data)
+
+//获取状态数 articleStateApi
+export const articleStateApi = (data: object) => fetch.post('/articleState', data)
+
+//文章发布/撤回 changeAritcleState
+export const changeAritcleStateApi = (data: object) => fetch.post('/changeAritcleState', data)
+
+//删除文章/deleteAritcle
+export const deleteAritcleApi = (data: object) => fetch.post('/deleteAritcle', data)
+
+
 
 
 

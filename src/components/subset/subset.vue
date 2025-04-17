@@ -6,7 +6,7 @@
         全部{{ subsetStore.count }}
       </div>
 
-      <div class="subset__menu" v-for="item in state.data" :key="item.id" v-if="props.classify == 0"
+      <div class="subset__menu" v-for="item in state" :key="item.id" v-if="props.classify == 0"
         :class="{ 'subset__menu-seledted': selected == item.id + 'state' }" @click="changeOption(item.id, 'state')">
         {{ item.name }}{{ item.value }}
       </div>
@@ -49,25 +49,19 @@
 import { onMounted } from 'vue';
 import { useSubset } from '../../hooks/subset';
 import { useSubsetStore } from '../../store/subset';
-import { state } from '../../mock/data';
 
 import subsetManage from './subset-manage.vue';
+import { get } from 'http';
 
 const subsetStore = useSubsetStore()
 
 
-const { inputValue,
-  selected,
-  changeOption,
-  rawSubset,
-  cancel,
-  confirm,
-  showModal,
-  visible, } = useSubset()
+const emits = defineEmits();
+const { inputValue, selected, changeOption, rawSubset, cancel, confirm, showModal, visible,getState,state } = useSubset(emits);
 
 
 
-const emits = defineEmits(['nowSubset'])
+
 const props = defineProps({
   classify: {
     default: -1,
@@ -80,6 +74,9 @@ const props = defineProps({
 
 onMounted(() => {
   rawSubset(props.classify);
+  if(props.classify==0){
+    getState()
+  }
 })
 </script>
 

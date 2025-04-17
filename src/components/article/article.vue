@@ -3,31 +3,40 @@
     <articleItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle"
       @state="updateState" />
     <div class="pagination">
-      <yk-pagination :total="count" size="m" @change="changePage"></yk-pagination>
+      
+      <yk-pagination
+        :total="count"
+        size="m"
+        @change="changePage"
+        :default-page-size="props.pageSize"
+      ></yk-pagination>
     </div>
   </yk-space>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, getCurrentInstance } from "vue"
+import { onMounted, getCurrentInstance,watch } from "vue"
 import articleItemVue from "./article-item.vue";
-import { mkarticle } from "../../mock/data";
-import { ArticleDate } from "../../utils/interface";
+import { useArticle } from "../../hooks/article";
+import { useUserStore } from '../../store/user';
+
+const userStore = useUserStore()
+const { getData,articleList,count, updateState,deleteArticle} = useArticle()
 
 const proxy: any = getCurrentInstance()?.proxy
 
 const props = defineProps({
   pageSize: {
     type: Number,
-    default: 6,
+    default: 3,
   },
   subsetId: {
     default: -1,
-    type: Number,
+    type: [Number,String]
   },
   state: {
-    default: 0,
-    type: Number,
+    default: -1,
+    type: [Number,String]
   },
   serchTerm: {
     type: String,
@@ -36,6 +45,7 @@ const props = defineProps({
 })
 
 const request = {
+  token:userStore.token,
   pageSize: props.pageSize,
   nowPage: 1,
   state: props.state,
@@ -44,53 +54,30 @@ const request = {
   count: true,
 }
 
-//获取文章
-//文章
-const articleList = ref<ArticleDate[]>([])
-//文章总数
-const count = ref<number>(0)
 
-const getData = (e: boolean) => {
-  if (e) {
-    count.value = mkarticle.count
-  }
-  let arr = mkarticle.list.slice(
-    (request.nowPage - 1) * request.pageSize,
-    request.nowPage * request.pageSize
-  )
-  articleList.value = [...arr]
-}
 
-//删除 
-const deleteArticle = (e: number) => {
-  articleList.value = articleList.value.filter((obj: any) => {
-    return obj.id !== e
-  })
-  proxy.$message({ type: 'primary', message: '删除完成' })
-}
 
-//修改
-const updateState = (e: any) => {
-  articleList.value.filter((i: { id: number; state: number }) => {
-    if (i.id == e.id) {
-      i.state = e.state
-      if (e.state === 1) {
-        proxy.$message({ type: 'primary', message: '发布成功' })
-      } else {
-        proxy.$message({ type: 'primary', message: '已撤回' })
-      }
-    }
-  })
-}
 
 //翻页 
 const changePage = (e: number) => {
   request.nowPage = e;
-  getData(false)
+  getData(request)
 }
+watch(
+  props,()=>{
+    console.log(props.state,props.subsetId)
+    //接受到修改再次查询数据
+    request.nowPage = 1
+    request.state = props.state
+    request.subsetId = props.subsetId
 
+    getData(request)
+
+
+  }
+)
 onMounted(() => {
-  getData(true)
+  getData(request)
   // console.log(articleList.value)
 })
 </script>

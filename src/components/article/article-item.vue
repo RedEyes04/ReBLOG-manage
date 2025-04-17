@@ -11,7 +11,7 @@
         <div class="article-item__datas">
           <yk-space size="xl">
             <yk-text type="secondary">
-              {{ subsetStroe.subsetName(props.data?.subsetId) }}
+              {{ subsetStroe.subsetName(props.data?.subset_id) }}
               <yk-text type="secondary" v-if="props.data!.label!.length > 0">
                 /
                 <span v-for="item in props.data?.label" style="padding-right:4px;">{{ item }}</span>
@@ -59,6 +59,7 @@ import { computed } from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { useSubsetStore } from "../../store/subset";
 import { momentm } from "../../utils/memont";
+import {baseImgPath} from "../../utils/env.ts"
 
 //store
 const subsetStroe = useSubsetStore()
@@ -74,7 +75,7 @@ const emits = defineEmits(["delete", "state"])
 
 //封面地址
 const cover = computed(() => {
-  return './src/assets/images/' + props.data?.cover
+  return baseImgPath+'/' + props.data?.cover
 })
 
 //删除 

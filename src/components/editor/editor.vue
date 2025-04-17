@@ -12,11 +12,12 @@
 <script lang="ts" setup>
 import './style.less' // 引入 css
 
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted, } from 'vue'
+import { Editor, Toolbar, InsertFnType} from '@wangeditor/editor-for-vue'
 import { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import { colors } from "./colors"
 import {uploadApi} from "../../api/index"
+import { baseImgPath } from '../../utils/env'
 
 const emits = defineEmits('editors')
 
@@ -25,7 +26,7 @@ const emits = defineEmits('editors')
 const editorRef = shallowRef()
 
 // 内容 HTML
-const valueHtml = ref('<p>hello</p>')
+const valueHtml = ref('')
 
 //工具栏固定
 const top = ref<boolean>(false)
@@ -85,6 +86,7 @@ const toolbarConfig: Partial<IToolbarConfig> = {
 
 //菜单配置
 const editorConfig: Partial<IEditorConfig> = {  // TS 语法
+  placeholder:"请输入一点内容吧！！！！",
   MENU_CONF: {
     color: {
       colors,
@@ -96,11 +98,13 @@ const editorConfig: Partial<IEditorConfig> = {  // TS 语法
       async customUpload(file: File, insertFn: InsertFnType) {
 
         const formData=new FormData()
-        formData.append('file','file')
-        uploadApi(formData).then(()=>{
+        formData.append('file',file)
+        uploadApi(formData).then((res:any)=>{
+          let url = baseImgPath + '/' + res.data.url
+          insertFn(url, res.data.url, url)
+          console.log(res)
 
         })
-        insertFn(url, alt, href)
       }
     }
   }
