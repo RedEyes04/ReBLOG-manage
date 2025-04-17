@@ -50,7 +50,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Subset: typeof import('./src/components/subset/subset.vue')['default']
     SubsetManage: typeof import('./src/components/subset/subset-manage.vue')['default']
-    Test: typeof import('./src/components/subset/test.vue')['default']
     TopTitle: typeof import('./src/components/bar/TopTitle.vue')['default']
     YkAffix: typeof import('@yike-design/ui')['YkAffix']
     YkAvatar: typeof import('@yike-design/ui')['YkAvatar']

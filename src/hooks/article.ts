@@ -158,9 +158,20 @@ export function useArticle() {
         gainArticleApi(request).then((res: any) => {
             if (tackleCode(res.code)) {
                 // console.log(res);
-                defaultArticle.value = res.data
+                let content = res.data.content
+                let formData = res.data
+                delete formData.id
+                delete formData.views
+                delete formData.moment
+                delete formData.state
+                delete formData.content
 
-                console.log(res.data);
+                if (formData.label) {
+                    formData.label = formData.label.split(',')
+                }
+
+                defaultArticle.value = { content, formData }
+
 
             }
         })

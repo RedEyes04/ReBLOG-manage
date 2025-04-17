@@ -16,7 +16,7 @@
             {{ tag }}
           </yk-tag>
           <yk-text type="third" @click="showLabel" style="cursor: pointer;white-space: nowrap;"
-            v-show="formData.label.length < 3">
+            v-show="formData.label!.length < 3">
             插入标签
           </yk-text>
         </yk-space>
@@ -48,7 +48,7 @@
       </yk-space>
     </yk-modal>
   </div>
-{{ props.form }}
+  <!-- {{ props.form }} -->
 </template>
 
 <script lang="ts" setup>
@@ -58,14 +58,14 @@ import { useSubsetStore } from '../../store/subset';
 import { useLabel } from '../../hooks/label';
 import { baseImgPath, baseUrl } from '../../utils/env';
 import { useCode } from '../../hooks/code';
-import {FormData} from '../../utils/interface';
+import { FormData } from '../../utils/interface';
 
 
 const { tackleCode } = useCode()
 type FormProps = {
   classify: number,
-  form?:FormData
-  
+  form?: FormData
+
 }
 // const props =withDefaults(defineProps<FormData>(), {
 //   classify: 0,
@@ -86,7 +86,7 @@ const props = withDefaults(defineProps<FormProps>(), {
 const emits = defineEmits(['formData'])
 
 // 表单数据（含标题、分类、标签、简介等）
-const formData = ref<any>({
+const formData = ref<FormData>({
   title: "",
   subset_id: undefined,
   label: [],         // 标签（字符串数组）
@@ -104,7 +104,7 @@ const raws = computed(() => {
 
 // 分类相关
 const subsetStore = useSubsetStore()
-const { rawSubset } = useSubset()
+const { rawSubset } = useSubset('')
 const subsetList = ref<{ id: string | number; name: string | number; value: number; moment?: string }[]>([])
 const subsetName = ref()
 
@@ -130,16 +130,16 @@ const showLabel = () => {
 
 // 新增标签（最多3个）
 const addLabel = () => {
-  if (inputValue.value && formData.value.label.length < 3) {
+  if (inputValue.value && formData.value.label!.length < 3) {
     confirm()
-    formData.value.label.push(inputValue.value)
+    formData.value.label!.push(inputValue.value)
   }
 }
 
 // 选择标签（从候选区添加到已选标签中）
 const selectLabel = (e: number | string) => {
-  if (formData.value.label.length < 3) {
-    formData.value.label.push(e)
+  if (formData.value.label!.length < 3) {
+    formData.value.label!.push(e)
     labelArr.value = labelArr.value.filter(item => item !== e)
   }
 }
@@ -147,7 +147,7 @@ const selectLabel = (e: number | string) => {
 // 删除标签（从已选中移除并回退到候选区）
 const deleteLabel = (e: number | string) => {
   labelArr.value.unshift(e)
-  formData.value.label = formData.value.label.filter(item => item !== e)
+  formData.value.label = formData.value.label!.filter(item => item !== e)
 }
 
 // 上传相关
@@ -164,11 +164,6 @@ const handleSuccess = (res: any) => {
   // console.log(e)
 }
 
-// 初始化分类、标签
-onMounted(() => {
-  rawSubset(props.classify)
-  rawLabel()
-})
 
 // 表单数据变动时向父组件同步
 watch(formData.value, (e) => {
@@ -188,6 +183,29 @@ watch(
   },
   { immediate: true }
 )
+
+
+watch(
+  () => props.form,
+  (e) => {
+    formData.value = e!
+    if(formData.value.cover){
+      let photoUrl = { name:'', url: baseImgPath + '/' + formData.value.cover}
+    fileUrl.value=[photoUrl]
+    }
+    
+  }
+)
+
+
+
+
+// 初始化分类、标签
+onMounted(() => {
+  rawSubset(props.classify)
+  rawLabel()
+})
+
 </script>
 
 
