@@ -5,7 +5,6 @@ import { createArticleApi, updateArticleApi, aritcleApi, changeAritcleStateApi, 
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../store/user';
 import { ArticleDate } from "../utils/interface";
-import { on } from 'events';
 
 const userStore = useUserStore()
 const { tackleCode } = useCode()
@@ -21,6 +20,7 @@ export function useArticle() {
     const form = ref()
     const formData = (e: any) => {
         form.value = e
+        console.log(e)
     }
     //收取editor内容
     const editors = ref()
@@ -40,10 +40,10 @@ export function useArticle() {
                 ...{
                     content: editors.value,
                     state: e,
-                    classify: 0,
-                    moment: new Date(),
                 }
             }
+
+
             let request = {
                 token: userStore.token,
                 value
@@ -153,11 +153,10 @@ export function useArticle() {
         let request = {
             token: userStore.token,
             articleId: id.value
-
         }
+
         gainArticleApi(request).then((res: any) => {
             if (tackleCode(res.code)) {
-                // console.log(res);
                 let content = res.data.content
                 let formData = res.data
                 delete formData.id
@@ -167,16 +166,14 @@ export function useArticle() {
                 delete formData.content
 
                 if (formData.label) {
-                    formData.label = formData.label.split(',')
+                    formData.label = formData.label.split(',')  // 拆分为数组
                 }
 
                 defaultArticle.value = { content, formData }
-
-
             }
         })
-
     }
+
     onMounted(() => {
         if (id.value) {
             getArticleData()

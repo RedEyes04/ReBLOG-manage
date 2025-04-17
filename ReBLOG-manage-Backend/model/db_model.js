@@ -276,9 +276,15 @@ exports.gainArticle = (id) => {
 
 //修改文章/图库updateArticle
 exports.updateArticle = (id, value) => {
-  let _sql = `update article set ? where id="${id}";`
-  return db.query2(_sql, value)
+  // 确保 value.label 是字符串类型
+  if (Array.isArray(value.label)) {
+    value.label = value.label.join(','); // 将数组转为字符串，'旅游,2025'
+  }
+
+  let _sql = `update article set ? where id="${id}";`;
+  return db.query2(_sql, value);
 }
+
 
 //新建日记createDiary
 exports.createDiary = (value) => {

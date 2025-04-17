@@ -166,9 +166,10 @@ const handleSuccess = (res: any) => {
 
 
 // 表单数据变动时向父组件同步
-watch(formData.value, (e) => {
+watch(formData,(e) => {
   emits('formData', e)
-})
+},
+{deep:true})
 
 // 同步分类数据
 watch(() => subsetStore.data, (newVal) => {
