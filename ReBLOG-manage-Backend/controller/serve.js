@@ -451,16 +451,22 @@ exports.createArticle = async (req, res) => {
 
 }
 
-//获取文章gainArticle
 exports.gainArticle = async (req, res) => {
-  let data = req.body.value;
-  await dbModel.gainArticle(data.id).then((result) => {
-    res.send({
-      code: 200,
-      data: result
-    })
-  })
-}
+  const articleId = req.body.articleId;
+  if (!articleId) {
+    return res.send({
+      code: 400,
+      msg: '缺少 articleId'
+    });
+  }
+
+  const result = await dbModel.gainArticle(articleId);
+  res.send({
+    code: 200,
+    data: result[0]
+  });
+};
+
 
 //修改文章/图库updateArticle
 exports.updateArticle = async (req, res) => {

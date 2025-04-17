@@ -71,6 +71,9 @@ export const changeAritcleStateApi = (data: object) => fetch.post('/changeAritcl
 //删除文章/deleteAritcle
 export const deleteAritcleApi = (data: object) => fetch.post('/deleteAritcle', data)
 
+//获取文章详情 /gainArticle
+export const gainArticleApi = (data: object) => fetch.post('/gainArticle', data)
+
 
 
 

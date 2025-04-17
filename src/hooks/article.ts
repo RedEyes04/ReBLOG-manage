@@ -1,10 +1,11 @@
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, onMounted } from 'vue'
 import { time } from '../utils/memont'
 import { useCode } from '../hooks/code';
-import { createArticleApi, updateArticleApi, aritcleApi, changeAritcleStateApi, deleteAritcleApi } from '../api';
+import { createArticleApi, updateArticleApi, aritcleApi, changeAritcleStateApi, deleteAritcleApi, gainArticleApi } from '../api';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../store/user';
 import { ArticleDate } from "../utils/interface";
+import { on } from 'events';
 
 const userStore = useUserStore()
 const { tackleCode } = useCode()
@@ -146,5 +147,30 @@ export function useArticle() {
         })
 
     }
-    return { formData, editorData, submit, nowMoment, getData, articleList, count, updateState, deleteArticle }
+    //获取文章详情
+    const defaultArticle = ref()
+    const getArticleData = () => {
+        let request = {
+            token: userStore.token,
+            articleId: id.value
+
+        }
+        gainArticleApi(request).then((res: any) => {
+            if (tackleCode(res.code)) {
+                // console.log(res);
+                defaultArticle.value = res.data
+
+                console.log(res.data);
+
+            }
+        })
+
+    }
+    onMounted(() => {
+        if (id.value) {
+            getArticleData()
+        }
+    })
+
+    return { formData, editorData, submit, nowMoment, getData, articleList, count, updateState, deleteArticle, id, getArticleData, defaultArticle }
 }

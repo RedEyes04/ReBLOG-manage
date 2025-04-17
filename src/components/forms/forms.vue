@@ -48,6 +48,7 @@
       </yk-space>
     </yk-modal>
   </div>
+{{ props.form }}
 </template>
 
 <script lang="ts" setup>
@@ -57,17 +58,29 @@ import { useSubsetStore } from '../../store/subset';
 import { useLabel } from '../../hooks/label';
 import { baseImgPath, baseUrl } from '../../utils/env';
 import { useCode } from '../../hooks/code';
+import {FormData} from '../../utils/interface';
 
 
 const { tackleCode } = useCode()
+type FormProps = {
+  classify: number,
+  form?:FormData
+  
+}
+// const props =withDefaults(defineProps<FormData>(), {
+//   classify: 0,
+// })
+const props = withDefaults(defineProps<FormProps>(), {
+  classify: 0,
+})
 
 // props
-const props = defineProps({
-  classify: {
-    default: 0,
-    type: Number
-  }
-})
+// const props = defineProps({
+//   classify: {
+//     default: 0,
+//     type: Number
+//   }
+// })
 
 // emits
 const emits = defineEmits(['formData'])

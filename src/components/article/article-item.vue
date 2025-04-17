@@ -41,7 +41,7 @@
               <IconRevokeOutline @click="updateState(0)" />
             </yk-tooltip>
             <yk-tooltip placement="top" title="编辑">
-              <IconFillOutline />
+              <IconFillOutline @click="updateArticle" />
             </yk-tooltip>
             <yk-popconfirm trigger="click" placement="topRight" title="确定删除" content="删除将不可恢复"
               @confirm="deleteArticle()">
@@ -60,7 +60,10 @@ import { ArticleDate } from '../../utils/interface';
 import { useSubsetStore } from "../../store/subset";
 import { momentm } from "../../utils/memont";
 import {baseImgPath} from "../../utils/env.ts"
+import { updateArticleApi } from "../../api/index.ts";
+import { useRouter } from "vue-router";
 
+const router = useRouter()
 //store
 const subsetStroe = useSubsetStore()
 
@@ -86,6 +89,17 @@ const deleteArticle = () => {
 //修改状态
 const updateState = (e: number) => {
   emits("state", { id: props.data!.id, state: e })
+}
+
+//修改文章
+const updateArticle=()=>{
+  router.push({
+    path:'editarticle'  ,
+    query:{
+      id:props.data!.id
+    }
+  })
+
 }
 </script>
 

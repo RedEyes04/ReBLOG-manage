@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import './style.less' // 引入 css
 
-import { onBeforeUnmount, ref, shallowRef, onMounted, } from 'vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted,watch } from 'vue'
 import { Editor, Toolbar, InsertFnType} from '@wangeditor/editor-for-vue'
 import { IToolbarConfig, IEditorConfig } from '@wangeditor/editor'
 import { colors } from "./colors"
@@ -21,13 +21,22 @@ import { baseImgPath } from '../../utils/env'
 
 const emits = defineEmits('editors')
 
+const props =defineProps(["content"])
 
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 
 // 内容 HTML
 const valueHtml = ref('')
+valueHtml.value = props.content
 
+watch(
+  ()=>props.content,
+  (e) => {
+    valueHtml.value = e
+  },
+  { immediate: true }
+)
 //工具栏固定
 const top = ref<boolean>(false)
 const toolbarTop = (e: boolean) => {

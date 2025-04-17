@@ -62,3 +62,14 @@ export interface DiaryDate {
   content: string;
   picture?: string[];
 }
+
+
+//日记
+export interface FormData {
+  title?: string,
+  subset_id?: number,
+  label?: string[],
+  introduce?: string,
+  cover?: string,
+  classify?: number,
+}

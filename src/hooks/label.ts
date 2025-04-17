@@ -49,7 +49,7 @@ export function useLabel() {
     }
 
     //新建分组内容
-    const inputValue = ref<number | string>()
+    const inputValue = ref<string>()
 
 
 

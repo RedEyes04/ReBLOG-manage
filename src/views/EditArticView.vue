@@ -8,18 +8,25 @@
         <yk-button @click="submit(1)">发布</yk-button>
       </yk-space>
     </div>
-    <editor style="width: 1200px;" @editors="editorData">
-      <forms :classify="0" @formData="formData" style="width:820px"></forms>
+    <editor style="width: 1200px;" @editors="editorData" :content="defaultArticle?.content">
+      <forms :classify="0" @formData="formData" style="width:820px" :form="defaultArticle"></forms>
     </editor>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from "vue";
 import editor from "../components/editor/editor.vue";
 import forms from '../components/forms/forms.vue';
 import { useArticle } from '../hooks/article';
+import { useRoute } from "vue-router";
 
-const { formData, editorData, submit, nowMoment } = useArticle()
+const route = useRoute()
+const { formData, editorData, submit, nowMoment,id, defaultArticle} = useArticle()
+if(route.query.id){
+  id.value = Number(route.query.id)
+  console.log(id.value)
+}
 
 </script>
 
