@@ -111,11 +111,24 @@ const subsetName = ref()
 // 分类选择
 const subsetSelect = (e: number) => {
   formData.value.subset_id! = e
+  nowSubset(e)
+}
+
+//当前分类
+const nowSubset = (e: number) => {
   const selected = subsetList.value.find(item => item.id === e)
   if (selected) {
     subsetName.value = selected.name
   }
 }
+
+
+
+
+
+
+
+
 
 // 标签相关
 const { rawLabel, label, inputValue, confirm } = useLabel()
@@ -172,9 +185,14 @@ watch(formData,(e) => {
 {deep:true})
 
 // 同步分类数据
-watch(() => subsetStore.data, (newVal) => {
+watch(() => subsetStore.data, 
+(newVal) => {
   subsetList.value = newVal
-}, { immediate: true })
+  if(formData.value.subset_id){
+      nowSubset(formData.value.subset_id)
+    }
+}, 
+{ immediate: true })
 
 // 同步标签数据（将标签对象数组转为字符串数组）
 watch(
@@ -193,6 +211,9 @@ watch(
     if(formData.value.cover){
       let photoUrl = { name:'', url: baseImgPath + '/' + formData.value.cover}
     fileUrl.value=[photoUrl]
+    }
+    if(formData.value.subset_id && subsetList.value){
+      nowSubset(formData.value.subset_id)
     }
     
   }
