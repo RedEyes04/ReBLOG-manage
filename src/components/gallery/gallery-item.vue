@@ -7,16 +7,16 @@
         </div>
         <yk-space :size="2">
           <div class="gallery-item__image--left image-div">
-            <yk-image :src="'./src/assets/images/' + props.data?.content![0]" width="78" height="78" :is-lazy="true"
-              :preview="false" fit="cover" v-if="props.data?.content![0]" />
+            <yk-image :src="baseImgPath+'/' + content[0].url" width="78" height="78" :is-lazy="true"
+              :preview="false" fit="cover" v-if="content[0]" />
           </div>
           <div class="gallery-item__image--center image-div">
-            <yk-image :src="'./src/assets/images/' + props.data?.content![1]" width="78" height="78" :is-lazy="true"
-              :preview="false" fit="cover" v-if="props.data?.content![1]" />
+            <yk-image :src="baseImgPath+'/' + content[1].url" width="78" height="78" :is-lazy="true"
+              :preview="false" fit="cover" v-if="content[1]" />
           </div>
           <div class="gallery-item__image--right image-div">
-            <yk-image :src="'./src/assets/images/' + props.data?.content![2]" width="78" height="78" :is-lazy="true"
-              :preview="false" fit="cover" v-if="props.data?.content![2]" />
+            <yk-image :src="baseImgPath+'/' + content[2].url" width="78" height="78" :is-lazy="true"
+              :preview="false" fit="cover" v-if="content[2]" />
           </div>
         </yk-space>
         <yk-space class="gallery-item__control" :size="4">
@@ -52,6 +52,7 @@
 import { computed } from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { momentm } from "../../utils/memont";
+import {baseImgPath} from "../../utils/env.ts"
 
 
 type galleryItemProps = {
@@ -65,7 +66,17 @@ const emits = defineEmits(["delete", "state"])
 
 //封面地址
 const cover = computed(() => {
-  return './src/assets/images/' + props.data?.cover
+  return baseImgPath+'/' + props.data?.cover
+})
+
+const content  = computed(()=>{
+  if(props.data?.content){
+    let cont = props.data.content.split(" ")
+    console.log(cont.map((obj:string)=>JSON.parse(obj)))
+    return cont.map((obj:string)=>JSON.parse(obj))
+  }else{
+    return ""
+  }
 })
 
 //删除 

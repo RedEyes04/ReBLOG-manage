@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, getCurrentInstance,watch } from "vue"
+import { onMounted,watch } from "vue"
 import articleItemVue from "./article-item.vue";
 import { useArticle } from "../../hooks/article";
 import { useUserStore } from '../../store/user';
@@ -23,7 +23,6 @@ import { useUserStore } from '../../store/user';
 const userStore = useUserStore()
 const { getData,articleList,count, updateState,deleteArticle} = useArticle()
 
-const proxy: any = getCurrentInstance()?.proxy
 
 const props = defineProps({
   pageSize: {

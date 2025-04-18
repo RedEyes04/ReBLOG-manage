@@ -51,7 +51,7 @@ export interface ArticleDate {
   state: number;//状态0未发布、1已发布
   comment: number;
   praise: number;//点赞次数
-  content?: string | string[]
+  content?: string
 }
 //日记
 export interface DiaryDate {
