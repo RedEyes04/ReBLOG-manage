@@ -60,6 +60,7 @@ declare module 'vue' {
     YkDrawer: typeof import('@yike-design/ui')['YkDrawer']
     YkDropdown: typeof import('@yike-design/ui')['YkDropdown']
     YkDropdownItem: typeof import('@yike-design/ui')['YkDropdownItem']
+    YkEmpty: typeof import('@yike-design/ui')['YkEmpty']
     YkImage: typeof import('@yike-design/ui')['YkImage']
     YkInput: typeof import('@yike-design/ui')['YkInput']
     YkInputSearch: typeof import('@yike-design/ui')['YkInputSearch']

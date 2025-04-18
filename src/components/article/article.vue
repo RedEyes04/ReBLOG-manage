@@ -2,7 +2,7 @@
   <yk-space dir="vertical" style="width:100%" size="xl">
     <articleItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle"
       @state="updateState" />
-    <div class="pagination">
+    <div class="pagination" v-show="count/props.pageSize>1">
       
       <yk-pagination
         :total="count"
@@ -10,6 +10,9 @@
         @change="changePage"
         :default-page-size="props.pageSize"
       ></yk-pagination>
+    </div>
+    <div class="empty" v-show="count == 0">
+      <yk-empty description="这里什么也没有哦OvO!" type="secondary" />
     </div>
   </yk-space>
 </template>
@@ -89,5 +92,12 @@ onMounted(() => {
   align-items: center;
   justify-content: flex-end;
   width: 100%;
+}
+.empty{
+  height: 400px;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 </style>
