@@ -20,7 +20,7 @@
           </div>
         </yk-space>
         <yk-space class="gallery-item__control" :size="4">
-          <IconFillOutline />
+          <IconFillOutline @click="updateArticle" />
           <yk-popconfirm trigger="click" placement="topRight" title="确定删除" content="删除将不可恢复" @confirm="deletegallery()">
             <IconDeleteOutline />
           </yk-popconfirm>
@@ -53,6 +53,9 @@ import { computed } from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { momentm } from "../../utils/memont";
 import {baseImgPath} from "../../utils/env.ts"
+import { useRouter } from "vue-router";
+
+const router = useRouter()
 
 
 type galleryItemProps = {
@@ -83,6 +86,21 @@ const content  = computed(()=>{
 const deletegallery = () => {
   emits("delete", props.data!.id)
 }
+
+
+//修改文章
+const updateArticle=()=>{
+  router.push({
+    path:'editgallery'  ,
+    query:{
+      id:props.data!.id
+    }
+  })
+
+}
+
+
+
 
 </script>
 
