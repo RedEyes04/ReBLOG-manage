@@ -7,12 +7,12 @@
           <template #content>
             <yk-space wrap :size="[32, 20]" style="padding:16px 0 16px 14px;">
               <div class="diary-editor__weather" v-for="item in weather"
-                :class="{ selected: diaryForm.weatherId == item.id }" @click="selectWeather(item.id)">
+                :class="{ selected: diaryForm.weather_id == item.id }" @click="selectWeather(item.id)">
                 <img :src="'./src/assets/' + item.icon" />
               </div>
             </yk-space>
           </template>
-          <img :src="'./src/assets/' + weather[diaryForm.weatherId].icon" />
+          <img :src="'./src/assets/' + weather[diaryForm.weather_id].icon" />
         </yk-popover>
       </div>
       <yk-text-area v-model="diaryForm.content" :max-lenght="1600" placeholder="请输入..." :auto-size="{
@@ -39,18 +39,18 @@ import { weather } from "../../utils/weather";
 
 type DiaryForm = {
   title?: string
-  weatherId: number
+  weather_id: number
   content?: string
   picture?: string[]
 }
 
-const diaryForm = ref<DiaryForm>({ weatherId: 0 })
+const diaryForm = ref<DiaryForm>({ weather_id: 0 })
 
 //上传地址
 const uploadUrl = 'https://www.huohuo90.com:3005/upload'
 //选择天气
 const selectWeather = (id: number) => {
-  diaryForm.value.weatherId = id
+  diaryForm.value.weather_id = id
 }
 
 </script>

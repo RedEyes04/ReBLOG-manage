@@ -1,19 +1,14 @@
+require('dotenv').config(); // 加载 .env 文件内容
+
 const config = {
   port: 3000,
-  database: { //链接数据库
-    HOST: "47.100.137.193",
-    PORT: 3306,
-    USER: "root",
-    PASSWORD: "zhou622..",
-    DB: "reblog"
+  database: {
+    HOST: process.env.DB_HOST,
+    PORT: process.env.DB_PORT,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DB: process.env.DB_NAME
   }
-  // database: { //链接数据库
-  //   HOST: "localhost",
-  //   PORT: 3306,
-  //   USER: "root",
-  //   PASSWORD: "123456",
-  //   DB: "reblog"
-  // }
-}
+};
 
-module.exports = config
+module.exports = config;

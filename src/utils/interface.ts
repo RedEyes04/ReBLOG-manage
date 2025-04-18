@@ -58,7 +58,7 @@ export interface DiaryDate {
   id: number;
   title: string;
   moment: Date;//时间
-  weatherId: number;//天气
+  weather_id: number;//天气
   content: string;
   picture?: string[];
 }
