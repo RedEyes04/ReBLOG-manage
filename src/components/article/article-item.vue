@@ -22,15 +22,15 @@
             <yk-space>
               <yk-text type="third">
                 <IconEyeOutline />
-                {{ props.data?.views }}
+                {{ views }}
               </yk-text>
               <yk-text type="third">
                 <IconLikeOutline />
-                {{ props.data?.praise }}
+                {{ praise }}
               </yk-text>
               <yk-text type="third">
                 <IconCommentOutline />
-                {{ props.data?.comment }}
+                {{ comment }}
               </yk-text>
             </yk-space>
           </yk-space>
@@ -56,12 +56,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed,ref,watch } from "vue"
+import { computed,ref,watch,onMounted } from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { useSubsetStore } from "../../store/subset";
 import { momentm } from "../../utils/memont";
 import {baseImgPath} from "../../utils/env.ts"
-import { updateArticleApi } from "../../api/index.ts";
+import { mkarticle } from "../../mock/data.ts";
 import { useRouter } from "vue-router";
 import { highlightKeywords } from "../../utils/highlight.ts";
 const router = useRouter()
@@ -135,7 +135,19 @@ watch(
   }
 )
 
+// mock 数据
+const views = ref(0);
+const praise = ref(0);
+const comment = ref(0);
 
+
+onMounted(() => {
+  const article = mkarticle.list[0];
+  
+  views.value = article.views;
+  praise.value = article.praise;
+  comment.value = article.comment;
+});
 
 
 </script>
