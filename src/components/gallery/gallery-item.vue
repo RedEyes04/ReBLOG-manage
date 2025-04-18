@@ -27,7 +27,7 @@
         </yk-space>
       </div>
       <div style="width:100%">
-        <p class="gallery-item__title">{{ props.data?.title }}</p>
+        <p class="gallery-item__title" v-html="title"></p>
         <div class="gallery-item__datas">
           <yk-space size="xl">
             <yk-space>
@@ -49,17 +49,21 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed ,ref,watch} from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { momentm } from "../../utils/memont";
 import {baseImgPath} from "../../utils/env.ts"
 import { useRouter } from "vue-router";
+import { highlightKeywords } from "../../utils/highlight.ts";
+
 
 const router = useRouter()
 
 
 type galleryItemProps = {
   data?: ArticleDate
+  serchTerm?:string
+
 }
 
 const props = withDefaults(defineProps<galleryItemProps>(), {
@@ -97,6 +101,19 @@ const updateArticle=()=>{
   })
 
 }
+//高亮关键词
+const title =ref(props.data?.title!)
+const highLight=(key?:string)=>{
+  title.value = highlightKeywords(props.data?.title!,key!)
+}
+
+watch(
+  ()=>props.serchTerm,
+  (e)=>{
+    highLight(e)
+  }
+)
+
 
 
 

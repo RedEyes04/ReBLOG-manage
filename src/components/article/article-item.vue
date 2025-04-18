@@ -4,10 +4,11 @@
       <div class="article-item__cover">
         <yk-image :src="cover" width="160" height="120" :is-lazy="true" :preview="false" fit="cover" />
         <p class="article-item__unpublish" v-if="props.data?.state === 0">未发布</p>
-      </div>
+      </div>  
       <div style="width:100%">
-        <p class="article-item__title">{{ props.data?.title }}</p>
-        <p class="article-item__introduce">{{ props.data?.introduce }}</p>
+        <p class="article-item__title" v-html="title"></p>
+        <p class="article-item__introduce" v-html="introduce"></p>
+
         <div class="article-item__datas">
           <yk-space size="xl">
             <yk-text type="secondary">
@@ -55,21 +56,25 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
+import { computed,ref,watch } from "vue"
 import { ArticleDate } from '../../utils/interface';
 import { useSubsetStore } from "../../store/subset";
 import { momentm } from "../../utils/memont";
 import {baseImgPath} from "../../utils/env.ts"
 import { updateArticleApi } from "../../api/index.ts";
 import { useRouter } from "vue-router";
-
+import { highlightKeywords } from "../../utils/highlight.ts";
 const router = useRouter()
 //store
 const subsetStroe = useSubsetStore()
 
 type ArticleItemProps = {
   data?: ArticleDate
+  serchTerm?:string
 }
+
+
+
 
 const props = withDefaults(defineProps<ArticleItemProps>(), {
 })
@@ -101,6 +106,38 @@ const updateArticle=()=>{
   })
 
 }
+
+//高亮关键词
+const introduce =ref(props.data?.introduce)
+const title =ref(props.data?.title)
+
+const highLight=(key?:string)=>{
+  if(props.data?.introduce){
+    introduce.value = highlightKeywords(props.data?.introduce,key!)
+  }
+  title.value = highlightKeywords(props.data?.title!,key!)
+}
+
+watch(
+  ()=>props.serchTerm,
+  (e)=>{
+    highLight(e)
+  }
+)
+
+
+
+
+watch(
+  ()=>props.serchTerm,
+  (e)=>{
+    highLight(e)
+  }
+)
+
+
+
+
 </script>
 
 <style lang="less" scoped>

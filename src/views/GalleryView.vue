@@ -1,8 +1,8 @@
 <template>
   <yk-space dir="vertical" style="width:100%;" size="l">
-    <TopTitle name="摄影图库" style="margin-bottom:8px" />
-    <subsetVue :classify="1" @nowSubset="nowSelect"/>
-    <galleryVue :subsetId="nowSubset" />
+    <TopTitle name="摄影图库" style="margin-bottom:8px" @search="search" />
+    <subsetVue :classify="1" @nowSubset="nowSelect" v-show="!query"/>
+    <galleryVue :subsetId="nowSubset" :serchTerm="serchTerm" />
     
   </yk-space>
 </template>
@@ -24,7 +24,16 @@ const nowSelect = (e:{id:number|string;type:string})=>{
     nowSubset.value=e.id
   }
 }
-
+const serchTerm = ref<string>()
+const query =ref<boolean>(false)
+const search = (e:string)=>{
+  serchTerm.value=e
+  if(e){
+    query.value = true
+  }else{
+    query.value=false
+  }
+}
 </script>
 
 <style lang="less" scoped></style>

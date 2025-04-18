@@ -1,9 +1,9 @@
 <template>
   <yk-space dir="vertical" style="width:100%;" size="l">
-    <TopTitle name="博客文章" style="margin-bottom:8px" />
-    <subsetVue :classify="0" @nowSubset="nowSelect"/>
+    <TopTitle name="博客文章" style="margin-bottom:8px" @search="search"/>
+    <subsetVue :classify="0" @nowSubset="nowSelect" v-show="!query"/>
     <yk-space style="width:100%;">
-      <Article-view style="width:100%" :state="nowState" :subsetId="nowSubset" />
+      <Article-view style="width:100%" :state="nowState" :subsetId="nowSubset" :serchTerm="serchTerm"/>
       <label-view />
     </yk-space>
   </yk-space>
@@ -33,7 +33,17 @@ const nowSelect = (e:{id:number|string;type:string})=>{
     nowSubset.value=e.id
   }
 }
-
+//搜索
+const serchTerm = ref<string>()
+const query =ref<boolean>(false)
+const search = (e:string)=>{
+  serchTerm.value=e
+  if(e){
+    query.value = true
+  }else{
+    query.value=false
+  }
+}
 </script>
 
 <style lang="less" scoped></style>

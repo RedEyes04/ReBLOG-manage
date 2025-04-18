@@ -1,7 +1,7 @@
 <template>
   <yk-space dir="vertical" style="width:100%" size="xl">
     <articleItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle"
-      @state="updateState" />
+      @state="updateState" :serchTerm="props.serchTerm"/>
     <div class="pagination" v-show="count/props.pageSize>1">
       
       <yk-pagination
@@ -68,11 +68,12 @@ const changePage = (e: number) => {
 }
 watch(
   props,()=>{
-    console.log(props.state,props.subsetId)
+    // console.log(props.serchTerm)
     //接受到修改再次查询数据
     request.nowPage = 1
     request.state = props.state
     request.subsetId = props.subsetId
+    request.serchTerm = props.serchTerm
 
     getData(request)
 
@@ -99,5 +100,5 @@ onMounted(() => {
   align-items: center;
   display: flex;
   justify-content: center;
-}
+} 
 </style>

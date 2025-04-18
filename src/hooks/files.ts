@@ -21,7 +21,7 @@ export function useFile() {
         }
         deleteFileApi(request).then((res: any) => {
             if (tackleCode(res.code)) {
-                console.log(res)
+                // console.log(res)
                 proxy.$message({ type: 'primary', message: '删除完成' })
 
             }

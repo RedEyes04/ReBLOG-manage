@@ -3,7 +3,7 @@
     <div class="gallery__content">
       <div class="gallery__content__files">
         <galleryItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle"
-          @state="updateState" />
+          @state="updateState" :serchTerm="props.serchTerm" />
       </div>
     </div>
 
@@ -73,6 +73,7 @@ watch(
     //接受到修改再次查询数据
     request.nowPage = 1
     request.subsetId = props.subsetId
+    request.serchTerm = props.serchTerm
 
     getData(request)
 
