@@ -6,8 +6,8 @@
         <img :src="baseImgPath+'/'+item.url " />
         <IconStarFill class="waterfall__item--cover" v-show="item.id === coverIndex" />
         <yk-space size="ss">
-          <p class="waterfall__item--tool" v-show="item.id !== coverIndex" @click="changeCover(item.id)">设为封面</p>
-          <IconDeleteOutline class="waterfall__item--delete" @click="deletePhoto(item.id)" />
+          <p class="waterfall__item--tool" v-show="item.id !== coverIndex" @click="changeCover(item)">设为封面</p>
+          <IconDeleteOutline class="waterfall__item--delete" @click="deletePhoto(item)" />
         </yk-space>
       </div>
     </div>
@@ -15,45 +15,50 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, getCurrentInstance } from 'vue'
-import { mphotos } from '../../mock/data';
+import { ref, onMounted } from 'vue'
 import { baseUrl,baseImgPath } from '../../utils/env';
 import { useCode } from '../../hooks/code';
 import { FileData } from '../../utils/interface';
+import { useFile } from '../../hooks/files';
+
+const emits = defineEmits(["cover" ,"editors"])
 const { tackleCode } = useCode()
 
 
-const proxy: any = getCurrentInstance()?.proxy
 
-//获取图片 
-const photos = ref()
-const getPhotos = () => {
-  photos.value = mphotos.data
-}
 
 const uploadUrl = `${baseUrl}/upload`
 //后端返回来的数组
 const fileList = ref<{url:string;id:number}[]>([])
 
 //封面 
-const coverIndex = ref<number>(0)
+const coverIndex = ref<number>(-1)
+//切换封面
+const changeCover = (e: { id: number; url: string }) => {
+  coverIndex.value = e.id
+  emits("cover",e.url)
 
-const changeCover = (e: number) => {
-  coverIndex.value = e
 }
 
+const {deleteFile} = useFile()
 
 //删除 
-const deletePhoto = (e: number) => {
-  photos.value = photos.value.filter((obj: any) => {
-    return obj.id !== e
+const deletePhoto = (e: { id: number; url: string }) => {
+  fileList.value = fileList.value.filter((obj: any) => {
+    return obj.id !== e.id
   })
-  if (coverIndex.value == e && photos.value.length > 0) {
-    coverIndex.value = photos.value[0].id
-  } else if (coverIndex.value == e && photos.value.length <= 0) {
+  emits("editors",fileList.value.map((obj:any)=>JSON.stringify(obj)).join(" "))
+
+  if (coverIndex.value == e.id && fileList.value.length > 0) {
+    coverIndex.value = fileList.value[0].id
+    emits("cover",fileList.value[0].url)
+
+  } else if (coverIndex.value == e.id && fileList.value.length <= 0) {
     coverIndex.value = -1
+    emits("cover",'')
+
   }
-  proxy.$message({ type: 'primary', message: '删除完成' })
+  deleteFile(e)
 }
 //图片提交
 const handleSuccess = (e:{code:number;data:FileData})=>{
@@ -63,12 +68,18 @@ const handleSuccess = (e:{code:number;data:FileData})=>{
       url:e.data.url
     }
     fileList.value.push(photo)
+    emits("editors",fileList.value.map((obj:any)=>JSON.stringify(obj)).join(" "))
+    if(coverIndex.value==-1){
+      coverIndex.value = e.data.id
+      emits("cover",e.data.url)
+    }
   }
   
   // console.log(e)
 }
+
 onMounted(() => {
-  getPhotos();
+  // getPhotos();
 })
 
 </script>

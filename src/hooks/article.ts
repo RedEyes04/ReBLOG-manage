@@ -20,12 +20,17 @@ export function useArticle() {
     const form = ref()
     const formData = (e: any) => {
         form.value = e
-        console.log(e)
+        // console.log(e)
     }
     //收取editor内容
     const editors = ref()
     const editorData = (e: any) => {
         editors.value = e
+    }
+    //收取封面
+    const cover = ref()
+    const coverData = (e: any) => {
+        cover.value = e
     }
     const nowMoment = ref()
 
@@ -40,15 +45,20 @@ export function useArticle() {
                 ...{
                     content: editors.value,
                     state: e,
+                    moment: new Date()
+
                 }
             }
 
+            if (cover.value) {
+                value.cover = cover.value
 
+            }
             let request = {
                 token: userStore.token,
                 value
             }
-
+            // console.log(request)
             createArticleApi(request).then((res: any) => {
                 if (tackleCode(res.code)) {
                     if (e === 0) {
@@ -57,8 +67,6 @@ export function useArticle() {
                     } else if (e === 1) {
                         proxy.$message({ type: 'primary', message: '发布成功' })
                         router.push("/")
-                    } else {
-                        proxy.$message({ type: 'primary', message: '发布成功' })
                     }
                 }
             })
@@ -69,7 +77,13 @@ export function useArticle() {
                 ...{
                     content: editors.value,
                     state: e,
+
+
                 }
+            }
+            if (cover.value) {
+                value.cover = cover.value
+
             }
             let request = {
                 token: userStore.token,
@@ -180,5 +194,19 @@ export function useArticle() {
         }
     })
 
-    return { formData, editorData, submit, nowMoment, getData, articleList, count, updateState, deleteArticle, id, getArticleData, defaultArticle }
+    return {
+        formData,
+        editorData,
+        submit,
+        nowMoment,
+        getData,
+        articleList,
+        count,
+        updateState,
+        deleteArticle,
+        id,
+        getArticleData,
+        defaultArticle,
+        coverData
+    }
 }

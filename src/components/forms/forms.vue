@@ -21,7 +21,7 @@
           </yk-text>
         </yk-space>
       </yk-space>
-      <div :class="{ introduce: props.classify == 0 }">
+      <div :class="{ introduce: props.classify == 0 }" style="width: 100%;">
         <yk-text-area v-model="formData.introduce" :max-length="800" placeholder="请输入简介"
           :auto-size="raws"></yk-text-area>
       </div>
@@ -32,7 +32,7 @@
     </div>
     <yk-modal v-model="visible" title="标签" size="s" :show-footer="false">
       <yk-space dir="vertical" size="l">
-        <yk-input v-model="inputValue" placeholder="请输入标签会车确定" style="width:280px" @submit="addLabel" />
+        <yk-input v-model="inputValue" placeholder="回车确定" style="width:280px" @submit="addLabel" />
         <yk-space size="s">
           <yk-tag v-for="(tag, index) in formData.label" :key="index" closeable shape="round" @close="deleteLabel(tag)">
             {{ tag }}
@@ -263,10 +263,11 @@ onMounted(() => {
     border-radius: 0;
     background-color: transparent;
     padding: 0;
+    
   }
 
   .introduce {
-    width: 100%;
+    
     border-bottom: 1px solid @gray-2;
   }
 
