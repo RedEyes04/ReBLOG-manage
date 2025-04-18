@@ -75,7 +75,6 @@ const cover = computed(() => {
 const content  = computed(()=>{
   if(props.data?.content){
     let cont = props.data.content.split(" ")
-    console.log(cont.map((obj:string)=>JSON.parse(obj)))
     return cont.map((obj:string)=>JSON.parse(obj))
   }else{
     return ""

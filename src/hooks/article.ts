@@ -172,6 +172,7 @@ export function useArticle() {
         gainArticleApi(request).then((res: any) => {
             if (tackleCode(res.code)) {
                 let content = res.data.content
+                let cover = res.data.cover
                 let formData = res.data
                 delete formData.id
                 delete formData.views
@@ -183,7 +184,7 @@ export function useArticle() {
                     formData.label = formData.label.split(',')  // 拆分为数组
                 }
 
-                defaultArticle.value = { content, formData }
+                defaultArticle.value = { content, formData, cover }
             }
         })
     }

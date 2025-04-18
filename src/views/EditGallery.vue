@@ -9,7 +9,7 @@
       </yk-space>
     </div>
     <yk-space style="width: 100%;">
-      <editPhotpVue @editors="editorData" @cover="coverData"/>
+      <editPhotpVue @editors="editorData" @cover="coverData" :content="defaultArticle?.content" :cover="defaultArticle?.cover"/>
       <div class="edit-form">
         <forms style="width:420px" :classify="1" @formData="formData" :form="defaultArticle?.formData"></forms>
       </div>

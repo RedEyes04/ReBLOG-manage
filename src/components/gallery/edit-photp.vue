@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,watch } from 'vue'
 import { baseUrl,baseImgPath } from '../../utils/env';
 import { useCode } from '../../hooks/code';
 import { FileData } from '../../utils/interface';
@@ -23,6 +23,8 @@ import { useFile } from '../../hooks/files';
 
 const emits = defineEmits(["cover" ,"editors"])
 const { tackleCode } = useCode()
+const props =defineProps(["content","cover"])
+
 
 
 
@@ -77,6 +79,29 @@ const handleSuccess = (e:{code:number;data:FileData})=>{
   
   // console.log(e)
 }
+
+watch(
+  () => props.content,
+  (e) => {
+    
+    let cont = e.split(" ")
+    fileList.value = cont.map((obj:string)=>JSON.parse(obj))
+    if(props.cover){
+      
+        for(let i =0;i<fileList.value.length;i++){
+          if(props.cover==fileList.value[i].url){
+            coverIndex.value = fileList.value[i].id
+
+          }
+        }
+       }
+    }
+
+    
+    
+  
+)
+
 
 onMounted(() => {
   // getPhotos();
