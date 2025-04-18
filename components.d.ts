@@ -37,6 +37,7 @@ declare module 'vue' {
     IconSearchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSearchOutline']
     IconSendOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSendOutline']
     IconSettingsOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSettingsOutline']
+    IconStarFill: typeof import('@yike-design/ui/es/components/svg-icon')['IconStarFill']
     IconSwitchOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconSwitchOutline']
     IconTickMinOutline: typeof import('@yike-design/ui/es/components/svg-icon')['IconTickMinOutline']
     Information: typeof import('./src/components/reply/information.vue')['default']

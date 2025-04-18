@@ -1,9 +1,9 @@
 <template>
   <div class="edit-photo">
-    <yk-upload :upload-url="uploadUrl" :draggable="true"></yk-upload>
+    <yk-upload :upload-url="uploadUrl" :draggable="true" @handleSuccess="handleSuccess"></yk-upload>
     <div class="waterfall">
-      <div class="waterfall__item" v-for="item in photos">
-        <img :src="'./src/assets/images/' + item.url" />
+      <div class="waterfall__item" v-for="item in fileList">
+        <img :src="baseImgPath+'/'+item.url " />
         <IconStarFill class="waterfall__item--cover" v-show="item.id === coverIndex" />
         <yk-space size="ss">
           <p class="waterfall__item--tool" v-show="item.id !== coverIndex" @click="changeCover(item.id)">设为封面</p>
@@ -17,6 +17,11 @@
 <script lang="ts" setup>
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import { mphotos } from '../../mock/data';
+import { baseUrl,baseImgPath } from '../../utils/env';
+import { useCode } from '../../hooks/code';
+import { FileData } from '../../utils/interface';
+const { tackleCode } = useCode()
+
 
 const proxy: any = getCurrentInstance()?.proxy
 
@@ -26,7 +31,9 @@ const getPhotos = () => {
   photos.value = mphotos.data
 }
 
-const uploadUrl = ''
+const uploadUrl = `${baseUrl}/upload`
+//后端返回来的数组
+const fileList = ref<{url:string;id:number}[]>([])
 
 //封面 
 const coverIndex = ref<number>(0)
@@ -48,7 +55,18 @@ const deletePhoto = (e: number) => {
   }
   proxy.$message({ type: 'primary', message: '删除完成' })
 }
-
+//图片提交
+const handleSuccess = (e:{code:number;data:FileData})=>{
+  if (tackleCode(e.code)) {
+    let photo = {
+      id:e.data.id,
+      url:e.data.url
+    }
+    fileList.value.push(photo)
+  }
+  
+  // console.log(e)
+}
 onMounted(() => {
   getPhotos();
 })
@@ -139,4 +157,9 @@ onMounted(() => {
     }
   }
 }
+.edit-photo{
+    .yk-upload_file-list{
+      display: none;
+    }
+  }
 </style>

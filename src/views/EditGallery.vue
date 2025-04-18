@@ -10,7 +10,7 @@
     <yk-space style="width: 100%;">
       <editPhotpVue />
       <div class="edit-form">
-        <formsVue style="width:420px" :classify="1" />
+        <forms style="width:420px" :classify="1" @formData="formData" :form="defaultArticle?.formData"></forms>
       </div>
     </yk-space>
   </div>
@@ -18,7 +18,17 @@
 
 <script lang="ts" setup>
 import editPhotpVue from "../components/gallery/edit-photp.vue";
-import formsVue from "../components/forms/forms.vue";
+import forms from "../components/forms/forms.vue";
+import { useArticle } from '../hooks/article';
+import { useRoute } from "vue-router";
+
+const route = useRoute()
+const { formData, editorData, submit, nowMoment, id, defaultArticle } = useArticle()
+if (route.query.id) {
+  id.value = Number(route.query.id)
+  console.log(id.value)
+}
+
 
 
 </script>

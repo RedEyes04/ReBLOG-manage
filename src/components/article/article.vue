@@ -52,6 +52,7 @@ const request = {
   subsetId: props.subsetId,
   serchTerm: props.serchTerm,
   count: true,
+  classify:0
 }
 
 

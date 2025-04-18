@@ -34,7 +34,7 @@ export interface FileData {
   url: string;//地址路径
   fileName: string;//文件名
   format: string;//格式
-  subsetId: number; //所属类型
+  subsetId?: number; //所属类型
   selected?: boolean;//是否选择
 }
 
