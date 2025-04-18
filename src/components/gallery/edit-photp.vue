@@ -83,7 +83,7 @@ const handleSuccess = (e:{code:number;data:FileData})=>{
 watch(
   () => props.content,
   (e) => {
-    
+    //将后端给的字符串转成数组
     let cont = e.split(" ")
     fileList.value = cont.map((obj:string)=>JSON.parse(obj))
     if(props.cover){

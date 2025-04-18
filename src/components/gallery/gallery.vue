@@ -34,10 +34,7 @@ const props = defineProps({
     default: -1,
     type: [Number,String]
   },
-  state: {
-    default: -1,
-    type: [Number,String]
-  },
+  
   serchTerm: {
     type: String,
     default: ""
@@ -48,7 +45,6 @@ const request = {
   token:userStore.token,
   pageSize: props.pageSize,
   nowPage: 1,
-  state: props.state,
   subsetId: props.subsetId,
   serchTerm: props.serchTerm,
   count: true,
@@ -66,10 +62,8 @@ const changePage = (e: number) => {
 }
 watch(
   props,()=>{
-    console.log(props.state,props.subsetId)
     //接受到修改再次查询数据
     request.nowPage = 1
-    request.state = props.state
     request.subsetId = props.subsetId
 
     getData(request)

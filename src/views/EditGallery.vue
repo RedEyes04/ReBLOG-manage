@@ -28,7 +28,7 @@ const route = useRoute()
 const { formData, editorData, submit, id, defaultArticle,coverData } = useArticle()
 if (route.query.id) {
   id.value = Number(route.query.id)
-  console.log(id.value)
+  // console.log(id.value)
 }
 
 //取消新建图库
