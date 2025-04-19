@@ -208,7 +208,7 @@ exports.getFilePage = (pageSize, nowPage, subsetId) => {
   if (subsetId > -1 && typeof subsetId == 'number') {
     _sql = `select * from file where subset_id="${subsetId}" order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   } else if (typeof subsetId == 'string') {
-    _sql = `select * from file where subset_id not in ("${subsetId}") order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
+    _sql = `select * from file  where subset_id is null  or subset_id not in (${subsetId}) order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   } else {
     _sql = `select * from file order by id desc limit ${(nowPage - 1) * pageSize},${pageSize};`
   }
@@ -221,7 +221,7 @@ exports.fileCount = (subsetId) => {
   if (subsetId > -1 && typeof subsetId == 'number') {
     _sql = `select count(*) as count from file where subset_id="${subsetId}";`
   } else if (typeof subsetId == 'string') {
-    _sql = `select count(*) as count from file where subset_id not in ("${subsetId}");`
+    _sql = `select count(*) as count from file where subset_id is null  or subset_id not in (${subsetId});`
   } else {
     _sql = `select count(*) as count from file;`
   }

@@ -8,8 +8,8 @@
         </yk-space>
       </template>
     </top-title>
-    <subsetVue :classify="2" @nowSubset="nowSubset" />
-    <filesVue :subsetId="nowSubset" />
+    <subsetVue :classify="2" @nowSubset="nowSelect" />
+    <filesVue :subsetId="nowSubset" :pageSize="8" />
   </yk-space>
 </template>
 

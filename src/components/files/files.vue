@@ -87,7 +87,7 @@ const request: Requset = {
 const drwData = (e: boolean) => {
   request.count = e
   fileApi(request).then((res: any) => {
-    console.log(res.data)
+    // console.log(res.data)
     if (tackleCode(res.code)) {
       if (e) {
         count.value = res.data.count
@@ -205,8 +205,13 @@ const changePage = (e: number) => {
 const subsetSelectedId = ref<number | string>();
 //切换 分组 
 const changeOption = (e: number | string) => {
-  subsetSelectedId.value = e
+  if (e !== undefined && e !== null) {
+    subsetSelectedId.value = e;
+  } else {
+    console.warn("传递的分组 ID 无效:", e);
+  }
 }
+
 
 const proxy: any = getCurrentInstance()?.proxy
 function cancel() {
@@ -222,10 +227,8 @@ watch(
     //接受到修改再次查询数据
     request.nowPage = 1
     request.subsetId = props.subsetId
-
-    // drwData(request)
-
-
+    // console.log(typeof props.subsetId)
+    drwData(true)
   }
 )
 onMounted(() => {
