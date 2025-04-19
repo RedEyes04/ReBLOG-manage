@@ -54,7 +54,7 @@ export interface ArticleDate {
   content?: string
 }
 
-// src/utils/interface.ts
+//日记1
 
 export interface DiaryDate {
   id?: number;
@@ -65,8 +65,6 @@ export interface DiaryDate {
   picture?: string;
 }
 
-
-//日记
 export interface FormData {
   title?: string,
   subset_id?: number,

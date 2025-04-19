@@ -17,17 +17,18 @@
         </yk-popover>
       </div>
       <yk-text-area v-model="diaryForm.content" :max-lenght="1600" placeholder="请输入..." :auto-size="{
-          minRows: 24,
-          maxRows: 24,
-        }"></yk-text-area>
+        minRows: 24,
+        maxRows: 24,
+      }"></yk-text-area>
       <div class="diary-editor__picture">
-        <yk-upload :upload-url="uploadUrl" :file-list="fileList" accept="image/*" @handleSuccess="handleSuccess" @handleDelete="deletePhoto"></yk-upload>
+        <yk-upload :upload-url="uploadUrl" :file-list="fileList" accept="image/*" @handleSuccess="handleSuccess"
+          @handleDelete="deletePhoto"></yk-upload>
       </div>
     </div>
     <div class="diary-editor__foot">
       <yk-space size="s">
         <yk-button type="secondary" @click="cancle">取消</yk-button>
-        <yk-button @click="newDiary" >新建笔记</yk-button>
+        <yk-button @click="newDiary">新建笔记</yk-button>
       </yk-space>
     </div>
   </div>
@@ -35,7 +36,7 @@
 
 <script lang="ts" setup>
 
-import { ref,getCurrentInstance } from "vue"
+import { ref, getCurrentInstance } from "vue"
 import { weather } from "../../utils/weather";
 import { DiaryDate } from '../../utils/interface';
 
@@ -57,8 +58,8 @@ const { tackleCode } = useCode()
 const diaryForm = ref<DiaryDate>({ weather_id: 0 })
 
 //上传地址
-  const uploadUrl = `${baseUrl}/upload`
-const fileList = ref<{url:string;id:number}[]>([])
+const uploadUrl = `${baseUrl}/upload`
+const fileList = ref<{ url: string; id: number }[]>([])
 
 
 //选择天气
@@ -67,59 +68,59 @@ const selectWeather = (id: number) => {
 }
 
 //图片提交
-const handleSuccess = (e:{code:number;data:FileData})=>{
+const handleSuccess = (e: { code: number; data: FileData }) => {
   if (tackleCode(e.code)) {
     let photo = {
-      id:e.data.id,
-      url:e.data.url
+      id: e.data.id,
+      url: e.data.url
     }
     fileList.value.push(photo)
-   
+
   }
- 
+
   // console.log(e)
 }
 
 
- //新建
- const newDiary=()=>{
-    if(fileList.value.length>0){
-      diaryForm.value.picture = fileList.value.map((obj:any)=>JSON.stringify(obj)).join(" ")
-    }
-    diaryForm.value.moment = new Date()
-    let data={
-      token: userStore.token,
-      value:diaryForm.value
+//新建
+const newDiary = () => {
+  if (fileList.value.length > 0) {
+    diaryForm.value.picture = fileList.value.map((obj: any) => JSON.stringify(obj)).join(" ")
+  }
+  diaryForm.value.moment = new Date()
+  let data = {
+    token: userStore.token,
+    value: diaryForm.value
 
-    }
-    createDiaryApi(data).then((res:any)=>{
-      if (tackleCode(res.code)) {
-        //清空编辑器内容
-        diaryForm.value={weather_id:0}
-        fileList.value=[]
-        proxy.$message({ type: 'primary', message: '发布成功' })
+  }
+  createDiaryApi(data).then((res: any) => {
+    if (tackleCode(res.code)) {
+      //清空编辑器内容
+      diaryForm.value = { weather_id: 0 }
+      fileList.value = []
+      proxy.$message({ type: 'primary', message: '发布成功' })
 
     }
 
 
   })
- }
+}
 
 //取消发布
-const cancle=()=>{
-  diaryForm.value={weather_id:0}
-        fileList.value=[]
+const cancle = () => {
+  diaryForm.value = { weather_id: 0 }
+  fileList.value = []
 }
 
 
 //图片删除 
-const {deleteFile} = useFile()
-const deletePhoto = (e:any) => {
+const { deleteFile } = useFile()
+const deletePhoto = (e: any) => {
   console.log(e[0])
-  let dFile=  fileList.value[e[0]]
+  let dFile = fileList.value[e[0]]
   deleteFile(dFile)
 
-  fileList.value.splice(e[0],1)
+  fileList.value.splice(e[0], 1)
 }
 
 

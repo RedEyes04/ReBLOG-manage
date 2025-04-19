@@ -4,7 +4,7 @@
       <diaryItemVue v-for="item in diaryList" :data="item" :key="item.id" @delete="deleteDiary" />
     </yk-space>
     <div class="pagination">
-      <yk-pagination :total="count" size="m" @change="changePage"></yk-pagination>
+      <yk-pagination :total="count" size="m" @change="changePage" :default-page-size="props.pageSize"></yk-pagination>
     </div>
 
   </div>
@@ -12,17 +12,19 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, getCurrentInstance } from "vue"
-import { mkdiary } from "../../mock/data";
 import { DiaryDate } from "../../utils/interface";
 import diaryItemVue from "./diary-item.vue";
-
-
+import { useCode } from '../../hooks/code';
+import { useUserStore } from '../../store/user';
+import { diaryApi, deleteDiaryApi } from "../../api";
+const userStore = useUserStore()
+const { tackleCode } = useCode()
+const currentPage = ref(1)
 const proxy: any = getCurrentInstance()?.proxy
-
 const props = defineProps({
   pageSize: {
     type: Number,
-    default: 6,
+    default: 2,
   },
   serchTerm: {
     type: String,
@@ -30,12 +32,7 @@ const props = defineProps({
   }
 })
 
-const request = {
-  pageSize: props.pageSize,
-  nowPage: 1,
-  serchTerm: props.serchTerm,
-  count: true,
-}
+
 
 //获取日记
 //日记
@@ -43,34 +40,57 @@ const diaryList = ref<DiaryDate[]>([])
 //日记总数
 const count = ref<number>(0)
 
-const getData = () => {
-  if (request.nowPage == 1) {
-    count.value = mkdiary.count
+const getData = (e: boolean) => {
+  const request = {
+    token: userStore.token,
+    pageSize: props.pageSize,
+    nowPage: currentPage.value,
+    serchTerm: props.serchTerm,
+    count: e,
   }
-  let arr = mkdiary.list.slice(
-    (request.nowPage - 1) * request.pageSize,
-    request.nowPage * request.pageSize
-  )
-  diaryList.value = [...arr]
-  // console.log(diaryList.value)
+  request.count = e
+  diaryApi(request).then((res: any) => {
+    if (tackleCode(res.code)) {
+      console.log(res)
+      if (e) {
+        count.value = res.data.count
+      }
+
+      diaryList.value = res.data.list
+
+    }
+
+
+  })
+
 }
 
 //删除 
 const deleteDiary = (e: number) => {
-  diaryList.value = diaryList.value.filter((obj: any) => {
-    return obj.id !== e
+  let request = {
+    token: userStore.token,
+    diaryId: e
+  }
+  deleteDiaryApi(request).then((res: any) => {
+    if (tackleCode(res.code)) {
+      diaryList.value = diaryList.value.filter((obj: any) => {
+        return obj.id !== e
+      })
+      proxy.$message({ type: 'primary', message: '删除完成' })
+    }
+
   })
-  proxy.$message({ type: 'primary', message: '删除完成' })
+
 }
 
 //翻页 
 const changePage = (e: number) => {
-  request.nowPage = e;
-  getData()
+  currentPage.value = e
+  getData(false)
 }
 
 onMounted(() => {
-  getData()
+  getData(true)
   // console.log(articleList.value)
 })
 </script>

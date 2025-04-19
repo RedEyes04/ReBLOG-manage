@@ -409,18 +409,12 @@ exports.getDiaryPage = async (req, res) => {
       let c = await dbModel.diaryCount(data.serchTerm)
       count = c[0].count;
     }
-    if (result.length > 0) {
-      for (let i = 0; i < result.length; i++) {
-        if (result[i].picture) {
-          result[i].picture = result[i].picture.split(",")
-        }
-      }
-    }
+
     res.send({
       code: 200,
       data: {
         count,
-        result
+        list: result
       }
     })
   })

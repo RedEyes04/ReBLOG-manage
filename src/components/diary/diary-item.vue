@@ -5,7 +5,7 @@
         <yk-space dir="vertical" :size="4">
           <p class="diary-item__title">
             {{ props.data?.title }}
-            <img :src="'./src/assets/' + weather[props.data?.weatherId!].icon" />
+            <img :src="'./src/assets/' + weather[props.data?.weather_id!].icon" />
           </p>
           <yk-text type="third">{{ momentl(props.data?.moment!) }}</yk-text>
         </yk-space>
@@ -26,6 +26,8 @@ import { computed } from "vue"
 import { DiaryDate } from '../../utils/interface';
 import { momentl } from "../../utils/memont";
 import { weather } from "../../utils/weather";
+import { baseImgPath } from '../../utils/env';
+
 
 
 type diaryItemProps = {
@@ -37,15 +39,20 @@ const props = withDefaults(defineProps<diaryItemProps>(), {
 
 //图片处理
 const images = computed(() => {
+
   if (props.data?.picture) {
+
     //深拷贝
-    let arr = JSON.parse(JSON.stringify(props.data?.picture))
+    let arr = props.data?.picture.split(" ").map((obj: string) => JSON.parse(obj))
+
+    let pic = []
+
     for (let i = 0; i < arr.length; i++) {
-      arr[i] = './src/assets/images/' + arr[i]
+      pic.push(baseImgPath + '/' + arr[i].url)
+
     }
-    return arr
+    return pic
   }
-  return undefined
 })
 
 const emits = defineEmits(["delete"])
