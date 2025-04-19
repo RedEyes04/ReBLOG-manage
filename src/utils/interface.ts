@@ -53,14 +53,16 @@ export interface ArticleDate {
   praise: number;//点赞次数
   content?: string
 }
-//日记
+
+// src/utils/interface.ts
+
 export interface DiaryDate {
-  id: number;
-  title: string;
-  moment: Date;//时间
-  weather_id: number;//天气
-  content: string;
-  picture?: string[];
+  id?: number;
+  title?: string;
+  moment?: Date;
+  weather_id?: number;
+  content?: string;
+  picture?: string;
 }
 
 

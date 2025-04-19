@@ -52,7 +52,7 @@ const getData = () => {
     request.nowPage * request.pageSize
   )
   diaryList.value = [...arr]
-  console.log(diaryList.value)
+  // console.log(diaryList.value)
 }
 
 //删除 

@@ -312,14 +312,17 @@ exports.deleteFile = (id) => {
 }
 
 
-// //添加评论数据
-// let addCommentTodatabases = () =>{
-//   let time = new Date();
-//   let _sql =`INSERT INTO comment(user_id,user_name,article_id,moment,content,complaint) VALUES('114515','REDEYES6','1','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒',6)`
-//   db.query2(_sql)
 
-// }
-// addCommentTodatabases();
+
+
+//添加评论数据
+let addCommentTodatabases = () => {
+  let time = new Date();
+  let _sql = `INSERT INTO comment(user_id,user_name,article_id,moment,content,complaint) VALUES('2','REDEYES5','2','${time}','希望就在我们各自的心中，看啊，道路就在我们的脚下，所以我们要奔跑于今天，一路奔跑，直到永恒',5)`
+  db.query2(_sql)
+
+}
+addCommentTodatabases();
 
 
 
@@ -334,13 +337,3 @@ exports.deleteFile = (id) => {
 
 
 
-// let message =
-//   `create table if not exists message(
-//    id INT NOT NULL AUTO_INCREMENT,
-//    user_id VARCHAR(100) NOT NULL COMMENT '用户',
-//    user_name VARCHAR(100) COMMENT '用户名称',
-//    moment VARCHAR(100) NOT NULL COMMENT '时间',
-//    content VARCHAR(1000) NOT NULL COMMENT '内容',
-//    isread INT DEFAULT 0 COMMENT '是否已读',
-//    PRIMARY KEY ( id )
-//   );`

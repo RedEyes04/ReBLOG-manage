@@ -78,6 +78,9 @@ export const gainArticleApi = (data: object) => fetch.post('/gainArticle', data)
 //删除文件 /deleteFile
 export const deleteFileApi = (data: object) => fetch.post('/deleteFile', data)
 
+//删除文件 /createDiary
+export const createDiaryApi = (data: object) => fetch.post('/createDiary', data)
+
 
 
 
