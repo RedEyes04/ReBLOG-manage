@@ -34,7 +34,7 @@ export interface FileData {
   url: string;//地址路径
   file_name: string;//文件名
   format: string;//格式
-  subsetId?: number; //所属类型
+  subset_id?: number; //所属类型
   selected?: boolean;//是否选择
   moment: Date;//时间
 

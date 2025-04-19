@@ -305,7 +305,7 @@ exports.deleteFile = (id) => {
     _sql = `delete from file where id="${id}";`
   } else {
     //批量删除
-    _sql = `delete from file where id in ("${id}");`
+    _sql = `delete from file where id in (${id});`
   }
 
   return db.query2(_sql)

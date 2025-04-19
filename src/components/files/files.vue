@@ -33,6 +33,9 @@
     <div class="pagination" v-show="count / props.pageSize > 1">
       <yk-pagination :total="count" size="m" @change="changePage" :default-page-size="props.pageSize"></yk-pagination>
     </div>
+    <div class="empty" v-show="count == 0">
+      <yk-empty description="这里什么也没有哦OvO!" type="secondary" />
+    </div>
   </div>
 
 </template>
@@ -46,7 +49,7 @@ import './files.less'
 import { useCode } from '../../hooks/code';
 
 import { useUserStore } from '../../store/user';
-import { fileApi } from "../../api";
+import { fileApi, deleteFileApi } from "../../api";
 const userStore = useUserStore()
 const { tackleCode } = useCode()
 //store
@@ -171,22 +174,58 @@ const selectFile = (e: number) => {
 
 //删除
 //删除单张图片
-const deleteFile = (e: number) => {
-  console.log(e)
-  files.value = files.value.filter((item: any) => {
-    return item.id !== e
+const deleteFile = (id: number, url: string) => {
+  let request = {
+    token: userStore.token,
+    filesId: id,
+    filesUrl: url
+
+  }
+
+  deleteFileApi(request).then((res: any) => {
+    // console.log(res.data)
+    if (tackleCode(res.code)) {
+      proxy.$message({ type: 'primary', message: '删除成功' })
+
+      files.value = files.value.filter((item: any) => {
+        return item.id !== id
+      })
+    }
   })
+
 }
 //全部删除
 const deleteFiles = () => {
   if (selectedFilesId.value.length > 0) {
+    //收集提交后的多项内容
+    let url = []
     for (let i = 0; i < selectedFilesId.value.length; i++) {
-      files.value = files.value.filter((item: any) => {
-        return item.id !== selectedFilesId.value[i]
-      })
+      for (let j = 0; j < files.value.length; j++) {
+        if (files.value[j].id == selectedFilesId.value[i]) {
+          url.push(files.value[j].url)
+        }
+      }
     }
-    //清除选择的ID
-    selectedFilesId.value = [];
+    let request = {
+      token: userStore.token,
+      filesId: selectedFilesId.value.join(','),
+      filesUrl: url
+    }
+    deleteFileApi(request).then((res: any) => {
+      // console.log(res.data)
+      if (tackleCode(res.code)) {
+        proxy.$message({ type: 'primary', message: '删除成功' })
+        //静态删除多项
+        for (let i = 0; i < selectedFilesId.value.length; i++) {
+          files.value = files.value.filter((item: any) => {
+            return item.id !== selectedFilesId.value[i]
+          })
+        }
+        //清除选择id
+        selectedFilesId.value = [];
+
+      }
+    })
   }
 }
 
@@ -231,6 +270,9 @@ watch(
     drwData(true)
   }
 )
+
+
+
 onMounted(() => {
   drwData(true)
 })
@@ -279,6 +321,14 @@ onMounted(() => {
     align-items: center;
     justify-content: flex-end;
     width: 100%;
+  }
+
+  .empty {
+    height: 400px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
 }
 </style>

@@ -502,6 +502,7 @@ exports.deleteFile = async (req, res) => {
   let data = req.body;
   await dbModel.deleteFile(data.filesId).then(async () => {
     //处理真实的文件删除
+    //如果数据库有记录而无真实图片注释下行删除数据库记录
     mkdir.delFiles(data.filesUrl)
     res.send({
       code: 200,

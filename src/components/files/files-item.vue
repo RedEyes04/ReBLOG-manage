@@ -52,7 +52,7 @@ const url = computed(() => {
   return baseImgPath + '/' + props.data?.url
 })
 //分类选择
-const subsetSelectedId = ref<number | string>(props.data?.subsetId!);
+const subsetSelectedId = ref<number | string>(props.data?.subset_id!);
 //切换 分组 
 const changeOption = (e: number | string) => {
   subsetSelectedId.value = e
@@ -63,7 +63,7 @@ function cancel() {
 }
 function confirm() {
   //如果当前选择于之前不同时
-  if (subsetSelectedId.value != props.data?.subsetId) {
+  if (subsetSelectedId.value != props.data?.subset_id) {
     let data = {
       id: props.data?.id,
       subsetId: subsetSelectedId.value,
@@ -74,7 +74,7 @@ function confirm() {
 }
 //删除 
 const deleteFile = () => {
-  emits("delete", props.data?.id)
+  emits("delete", props.data?.id, props.data?.url)
 }
 //选择
 const checkFile = () => {
