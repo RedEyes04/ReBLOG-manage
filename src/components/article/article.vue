@@ -1,15 +1,10 @@
 <template>
   <yk-space dir="vertical" style="width:100%" size="xl">
-    <articleItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle"
-      @state="updateState" :serchTerm="props.serchTerm"/>
-    <div class="pagination" v-show="count/props.pageSize>1">
-      
-      <yk-pagination
-        :total="count"
-        size="m"
-        @change="changePage"
-        :default-page-size="props.pageSize"
-      ></yk-pagination>
+    <articleItemVue v-for="item in articleList" :data="item" :key="item.id" @delete="deleteArticle" @state="updateState"
+      :serchTerm="props.serchTerm" />
+    <div class="pagination" v-show="count / props.pageSize > 1">
+
+      <yk-pagination :total="count" size="m" @change="changePage" :default-page-size="props.pageSize"></yk-pagination>
     </div>
     <div class="empty" v-show="count == 0">
       <yk-empty description="这里什么也没有哦OvO!" type="secondary" />
@@ -18,13 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted,watch } from "vue"
+import { onMounted, watch } from "vue"
 import articleItemVue from "./article-item.vue";
 import { useArticle } from "../../hooks/article";
 import { useUserStore } from '../../store/user';
 
 const userStore = useUserStore()
-const { getData,articleList,count, updateState,deleteArticle} = useArticle()
+const { getData, articleList, count, updateState, deleteArticle } = useArticle()
 
 
 const props = defineProps({
@@ -34,11 +29,11 @@ const props = defineProps({
   },
   subsetId: {
     default: -1,
-    type: [Number,String]
+    type: [Number, String]
   },
   state: {
     default: -1,
-    type: [Number,String]
+    type: [Number, String]
   },
   serchTerm: {
     type: String,
@@ -47,14 +42,14 @@ const props = defineProps({
 })
 
 const request = {
-  token:userStore.token,
+  token: userStore.token,
   pageSize: props.pageSize,
   nowPage: 1,
   state: props.state,
   subsetId: props.subsetId,
   serchTerm: props.serchTerm,
   count: true,
-  classify:0
+  classify: 0
 }
 
 
@@ -67,7 +62,7 @@ const changePage = (e: number) => {
   getData(request)
 }
 watch(
-  props,()=>{
+  props, () => {
     // console.log(props.serchTerm)
     //接受到修改再次查询数据
     request.nowPage = 1
@@ -94,11 +89,12 @@ onMounted(() => {
   justify-content: flex-end;
   width: 100%;
 }
-.empty{
+
+.empty {
   height: 400px;
   width: 100%;
   align-items: center;
   display: flex;
   justify-content: center;
-} 
+}
 </style>

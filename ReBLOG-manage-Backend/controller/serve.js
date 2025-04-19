@@ -378,7 +378,7 @@ exports.getFile = async (req, res) => {
       code: 200,
       data: {
         count,
-        result
+        list: result
       }
     })
   })

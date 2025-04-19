@@ -8,8 +8,8 @@
         </yk-space>
       </template>
     </top-title>
-    <subsetVue :classify="2" />
-    <filesVue />
+    <subsetVue :classify="2" @nowSubset="nowSubset" />
+    <filesVue :subsetId="nowSubset" />
   </yk-space>
 </template>
 
@@ -17,6 +17,20 @@
 import TopTitle from '../components/bar/TopTitle.vue';
 import filesVue from '../components/files/files.vue';
 import subsetVue from '../components/subset/subset.vue';
+import { ref } from 'vue'
+const nowSubset = ref<number | string>(-1)
+
+const nowSelect = (e: { id: number | string; type: string }) => {
+  // console.log(e)
+  if (e.type == "all") {
+    nowSubset.value = -1
+  } else if (e.type == "subset" || e.type == "exclude") {
+    nowSubset.value = e.id
+  }
+}
+
+
+
 </script>
 
 <style lang="less" scoped>

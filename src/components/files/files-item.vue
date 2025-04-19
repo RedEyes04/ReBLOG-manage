@@ -24,8 +24,7 @@
       </div>
     </div>
     <div class="file-item__name">
-      <p class="file-item__name-file">{{ props.data?.fileName }}</p>
-      <p>.{{ props.data?.format }}</p>
+      <p class="file-item__name-file">{{ props.data?.url }}</p>
     </div>
   </div>
 </template>
@@ -35,6 +34,7 @@ import { computed, ref } from "vue";
 import { FileData } from "../../utils/interface"
 import { useSubsetStore } from '../../store/subset';
 import './files.less'
+import { baseImgPath } from "../../utils/env";
 
 //store
 const subsetStore = useSubsetStore();
@@ -49,7 +49,7 @@ const props = withDefaults(defineProps<FielItemProps>(), {
 const emits = defineEmits(['changeSubsetId', 'delete', 'selected'])
 //图片路径
 const url = computed(() => {
-  return "/src/assets/images/" + props.data?.url
+  return baseImgPath + '/' + props.data?.url
 })
 //分类选择
 const subsetSelectedId = ref<number | string>(props.data?.subsetId!);

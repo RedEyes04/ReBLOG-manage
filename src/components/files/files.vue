@@ -30,19 +30,25 @@
       <filesItem v-for="item in files" :data="item" :key="item.id" @selected="selectFile" @delete="deleteFile"
         @changeSubsetId="changeSubset" />
     </div>
-    <div class="pagination">
-      <yk-pagination :total="count" size="m" @change="changePage"></yk-pagination>
+    <div class="pagination" v-show="count / props.pageSize > 1">
+      <yk-pagination :total="count" size="m" @change="changePage" :default-page-size="props.pageSize"></yk-pagination>
     </div>
   </div>
+
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, getCurrentInstance } from "vue"
+import { onMounted, ref, getCurrentInstance, watch } from "vue"
 import { mkfile } from "../../mock/data";
 import filesItem from "./files-item.vue"
 import { useSubsetStore } from '../../store/subset';
 import './files.less'
+import { useCode } from '../../hooks/code';
 
+import { useUserStore } from '../../store/user';
+import { fileApi } from "../../api";
+const userStore = useUserStore()
+const { tackleCode } = useCode()
 //store
 const subsetStore = useSubsetStore();
 
@@ -64,27 +70,37 @@ type Requset = {
   token?: string;
   pageSize: number;//单页条数；
   nowPage: number;//当前页
+  subsetId?: number | string;
+  count: boolean
 }
 
 const request: Requset = {
+  token: userStore.token,
   pageSize: props.pageSize,
+  subsetId: props.subsetId,
   nowPage: 1,
+  count: false
+
 }
 
 //获取数据
 const drwData = (e: boolean) => {
-  let data = mkfile;
-  if (e) {
-    count.value = data.count;
-  }
-  files.value = data.list.slice(
-    (request.nowPage - 1) * request.pageSize,
-    request.nowPage * request.pageSize
-  );
-  //加入选择项
-  for (let i = 0; i < files.value.length; i++) {
-    files.value[i].selected = false;
-  }
+  request.count = e
+  fileApi(request).then((res: any) => {
+    console.log(res.data)
+    if (tackleCode(res.code)) {
+      if (e) {
+        count.value = res.data.count
+      }
+      let arr = res.data.list
+      //加入选择项
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].selected = false;
+      }
+      files.value = arr
+    }
+  })
+
   // console.log(files.value)
 }
 
@@ -200,6 +216,18 @@ function confirm() {
   proxy.$message({ type: 'primary', message: '你点击了确认按钮' })
 }
 
+watch(
+  props, () => {
+    // console.log(props.serchTerm)
+    //接受到修改再次查询数据
+    request.nowPage = 1
+    request.subsetId = props.subsetId
+
+    // drwData(request)
+
+
+  }
+)
 onMounted(() => {
   drwData(true)
 })

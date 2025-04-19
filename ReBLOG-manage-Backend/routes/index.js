@@ -203,8 +203,8 @@ module.exports = function (app) {
     }
   })
 
-  //获取文件getFile
-  app.post('/getFile', (req, res) => {
+  //获取文件file
+  app.post('/file', (req, res) => {
     if (typeof (req.body.token) != 'undefined') {
       serve.getFile(req, res)
     } else {
