@@ -3,7 +3,7 @@
     <yk-upload :upload-url="uploadUrl" :draggable="true" @handleSuccess="handleSuccess"></yk-upload>
     <div class="waterfall">
       <div class="waterfall__item" v-for="item in fileList">
-        <img :src="baseImgPath+'/'+item.url " />
+        <img :src="baseImgPath + '/' + item.url" />
         <IconStarFill class="waterfall__item--cover" v-show="item.id === coverIndex" />
         <yk-space size="ss">
           <p class="waterfall__item--tool" v-show="item.id !== coverIndex" @click="changeCover(item)">设为封面</p>
@@ -15,15 +15,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted,watch } from 'vue'
-import { baseUrl,baseImgPath } from '../../utils/env';
+import { ref, onMounted, watch } from 'vue'
+import { baseUrl, baseImgPath } from '../../utils/env';
 import { useCode } from '../../hooks/code';
 import { FileData } from '../../utils/interface';
 import { useFile } from '../../hooks/files';
 
-const emits = defineEmits(["cover" ,"editors"])
+const emits = defineEmits(["cover", "editors"])
 const { tackleCode } = useCode()
-const props =defineProps(["content","cover"])
+const props = defineProps(["content", "cover"])
 
 
 
@@ -31,52 +31,52 @@ const props =defineProps(["content","cover"])
 
 const uploadUrl = `${baseUrl}/upload`
 //后端返回来的数组
-const fileList = ref<{url:string;id:number}[]>([])
+const fileList = ref<{ url: string; id: number }[]>([])
 
 //封面 
 const coverIndex = ref<number>(-1)
 //切换封面
 const changeCover = (e: { id: number; url: string }) => {
   coverIndex.value = e.id
-  emits("cover",e.url)
+  emits("cover", e.url)
 
 }
 
-const {deleteFile} = useFile()
+const { deleteFile } = useFile()
 
 //删除 
 const deletePhoto = (e: { id: number; url: string }) => {
   fileList.value = fileList.value.filter((obj: any) => {
     return obj.id !== e.id
   })
-  emits("editors",fileList.value.map((obj:any)=>JSON.stringify(obj)).join(" "))
+  emits("editors", fileList.value.map((obj: any) => JSON.stringify(obj)).join(" "))
 
   if (coverIndex.value == e.id && fileList.value.length > 0) {
     coverIndex.value = fileList.value[0].id
-    emits("cover",fileList.value[0].url)
+    emits("cover", fileList.value[0].url)
 
   } else if (coverIndex.value == e.id && fileList.value.length <= 0) {
     coverIndex.value = -1
-    emits("cover",'')
+    emits("cover", '')
 
   }
   deleteFile(e)
 }
 //图片提交
-const handleSuccess = (e:{code:number;data:FileData})=>{
+const handleSuccess = (e: { code: number; data: FileData }) => {
   if (tackleCode(e.code)) {
     let photo = {
-      id:e.data.id,
-      url:e.data.url
+      id: e.data.id,
+      url: e.data.url
     }
     fileList.value.push(photo)
-    emits("editors",fileList.value.map((obj:any)=>JSON.stringify(obj)).join(" "))
-    if(coverIndex.value==-1){
+    emits("editors", fileList.value.map((obj: any) => JSON.stringify(obj)).join(" "))
+    if (coverIndex.value == -1) {
       coverIndex.value = e.data.id
-      emits("cover",e.data.url)
+      emits("cover", e.data.url)
     }
   }
-  
+
   // console.log(e)
 }
 
@@ -85,21 +85,21 @@ watch(
   (e) => {
     //将后端给的字符串转成数组
     let cont = e.split(" ")
-    fileList.value = cont.map((obj:string)=>JSON.parse(obj))
-    if(props.cover){
-      
-        for(let i =0;i<fileList.value.length;i++){
-          if(props.cover==fileList.value[i].url){
-            coverIndex.value = fileList.value[i].id
+    fileList.value = cont.map((obj: string) => JSON.parse(obj))
+    if (props.cover) {
 
-          }
+      for (let i = 0; i < fileList.value.length; i++) {
+        if (props.cover == fileList.value[i].url) {
+          coverIndex.value = fileList.value[i].id
+
         }
-       }
+      }
     }
+  }
 
-    
-    
-  
+
+
+
 )
 
 
@@ -193,9 +193,10 @@ onMounted(() => {
     }
   }
 }
-.edit-photo{
-    .yk-upload_file-list{
-      display: none;
-    }
+
+.edit-photo {
+  .yk-upload_file-list {
+    display: none;
   }
+}
 </style>
