@@ -52,7 +52,7 @@ const proxy: any = getCurrentInstance()?.proxy
 
 const { tackleCode } = useCode()
 
-
+const emits = defineEmits(["diaryData"])
 
 
 const diaryForm = ref<DiaryDate>({ weather_id: 0 })
@@ -95,6 +95,11 @@ const newDiary = () => {
   }
   createDiaryApi(data).then((res: any) => {
     if (tackleCode(res.code)) {
+
+      //新建传给父级
+      let data = diaryForm.value
+      data.id = res.id
+      emits("diaryData", data)
       //清空编辑器内容
       diaryForm.value = { weather_id: 0 }
       fileList.value = []

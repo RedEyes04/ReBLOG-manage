@@ -475,9 +475,10 @@ exports.updateArticle = async (req, res) => {
 //新建日记createDiary
 exports.createDiary = async (req, res) => {
   let data = req.body;
-  await dbModel.createDiary(data.value).then(() => {
+  await dbModel.createDiary(data.value).then((result) => {
     res.send({
       code: 200,
+      id: result.insertId
     })
   })
 }
