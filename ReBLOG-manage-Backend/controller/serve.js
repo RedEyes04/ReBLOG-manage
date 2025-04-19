@@ -391,7 +391,7 @@ exports.getFile = async (req, res) => {
 //移动文件removeFile
 exports.removeFile = async (req, res) => {
   let data = req.body;
-
+  // console.log(data)
   await dbModel.removeFile(data.fileId, data.subsetId).then(() => {
     res.send({
       code: 200,

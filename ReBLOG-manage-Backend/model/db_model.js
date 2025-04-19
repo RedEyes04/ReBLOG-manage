@@ -230,7 +230,7 @@ exports.fileCount = (subsetId) => {
 
 //移动文件removeFile
 exports.removeFile = (id, subsetId) => {
-  let _sql = `update file set subset_id="${subsetId}" where id="${id}";`
+  let _sql = `update file set subset_id="${subsetId}" where id in (${id});`
   return db.query2(_sql)
 }
 

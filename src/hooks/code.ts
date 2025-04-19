@@ -3,14 +3,14 @@ import { YkMessage } from "@yike-design/ui";
 
 export function useCode() {
   const router = useRouter();
-  
+
   // code验证
   const tackleCode = (e: number) => {
     if (e === 300) {
       // 未通过验证
       router.push('/login');
       YkMessage({
-        type: 'warning', 
+        type: 'warning',
         message: 'Token验证失败,请重新登录',
       });
       return false;

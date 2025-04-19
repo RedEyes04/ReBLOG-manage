@@ -49,7 +49,7 @@ import './files.less'
 import { useCode } from '../../hooks/code';
 
 import { useUserStore } from '../../store/user';
-import { fileApi, deleteFileApi } from "../../api";
+import { fileApi, deleteFileApi, removeFileApi } from "../../api";
 const userStore = useUserStore()
 const { tackleCode } = useCode()
 //store
@@ -229,10 +229,7 @@ const deleteFiles = () => {
   }
 }
 
-//切换单张图片分组
-const changeSubset = (e: any) => {
-  proxy.$message({ type: 'primary', message: e.id })
-}
+
 
 //翻页 
 const changePage = (e: number) => {
@@ -253,11 +250,84 @@ const changeOption = (e: number | string) => {
 
 
 const proxy: any = getCurrentInstance()?.proxy
+
+
+//切换单张图片分组
+const changeSubset = (e: any) => {
+  // console.log(e)
+  let request = {
+    token: userStore.token,
+    fileId: e.id,
+    subsetId: e.subsetId
+
+  }
+
+  removeFileApi(request).then((res: any) => {
+    // console.log(res.data)
+    if (tackleCode(res.code)) {
+      //静态删除
+      files.value = files.value.filter((item: any) => {
+        return item.id !== e.id
+      })
+      //将分组的数值修改
+      for (let i = 0; i < subsetStore.data.length; i++) {
+        if (subsetStore.data[i].id === e.subsetId) {
+          //增加移动前分组
+          subsetStore.data[i].value++
+        }
+        if (subsetStore.data[i].id === props.subsetId && props.subsetId != -1) {
+          //减少移动前分组
+          subsetStore.data[i].value--
+
+        }
+      }
+      proxy.$message({ type: 'primary', message: '移动成功' })
+
+    }
+  })
+
+}
+
+//切换多张图片分组
+
 function cancel() {
+
   proxy.$message({ type: 'warning', message: '你点击了取消按钮' })
 }
 function confirm() {
-  proxy.$message({ type: 'primary', message: '你点击了确认按钮' })
+  let request = {
+    token: userStore.token,
+    fileId: selectedFilesId.value.join(','),
+    subsetId: subsetSelectedId.value
+  }
+  removeFileApi(request).then((res: any) => {
+    // console.log(res.data)
+    if (tackleCode(res.code)) {
+      //静态删除
+      for (let i = 0; i < selectedFilesId.value.length; i++) {
+        files.value = files.value.filter((item: any) => {
+          return item.id !== selectedFilesId.value[i]
+        })
+      }
+
+      //将分组的数值修改
+      for (let i = 0; i < subsetStore.data.length; i++) {
+        if (subsetStore.data[i].id === subsetSelectedId.value) {
+          //增加移动前分组
+          subsetStore.data[i].value += selectedFilesId.value.length
+        }
+        if (subsetStore.data[i].id === props.subsetId && props.subsetId != -1) {
+          //减少移动前分组
+          subsetStore.data[i].value -= selectedFilesId.value.length
+
+        }
+      }
+      //清除所选id
+      selectedFilesId.value = [];
+      proxy.$message({ type: 'primary', message: '移动成功' })
+
+    }
+  })
 }
 
 watch(
