@@ -1,15 +1,41 @@
 const mysql = require('mysql')
 const config = require('../config/default')
 
-//数据库链接
-const connection = mysql.createConnection({
-  host: config.database.HOST,
-  port: config.database.PORT, 
-  user: config.database.USER,
-  password: config.database.PASSWORD,
-})
+// 数据库链接
+let connection;
 
-//直接链接
+function handleDisconnect() {
+  connection = mysql.createConnection({
+    host: config.database.HOST,
+    port: config.database.PORT, 
+    user: config.database.USER,
+    password: config.database.PASSWORD,
+  });
+
+  connection.connect(err => {
+    if (err) {
+      console.error('Error connecting to MySQL:', err);
+      setTimeout(handleDisconnect, 2000); // 2秒后重连
+    } else {
+      console.log('Connected to MySQL');
+    }
+  });
+
+  connection.on('error', err => {
+    console.error('MySQL connection error:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      console.log('Connection lost. Reconnecting...');
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+}
+
+// 调用一次，开始连接
+handleDisconnect();
+
+// 直接链接：建库用
 let query = (sql, values) => {
   return new Promise((resolve, reject) => {
     connection.query(sql, values, (err, result) => {
@@ -22,9 +48,9 @@ let query = (sql, values) => {
   })
 }
 
-//链接指定数据库
+// 链接指定数据库
 const pool = mysql.createPool({
-  connectionLimit: 10,  //链接数量
+  connectionLimit: 10, // 链接数量
   host: config.database.HOST,
   user: config.database.USER,
   password: config.database.PASSWORD,
@@ -44,24 +70,23 @@ let query2 = (sql, values) => {
           } else {
             resolve(rows)
           }
-          connection.release();   // 释放该链接，把该链接放回池里供其他人使用
-          // connection.destroy();   // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
+          connection.release(); // 释放链接
+          // connection.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。
         })
       }
     })
   })
 }
 
-//数据库创建语句
+// 数据库创建语句
 let reblog = 'create database if not exists reblog default charset utf8 collate utf8_general_ci;'
 
-//创建数据库
+// 创建数据库
 let createDatabase = (db) => {
   return query(db, [])
 }
 
-
-//数据表
+// 数据表
 let users =
   `create table if not exists users(
     id INT NOT NULL AUTO_INCREMENT,
@@ -107,12 +132,11 @@ let article =
     PRIMARY KEY ( id )
   );`
 
-//文章点赞
 let praise =
   `create table if not exists praise(
     id INT NOT NULL AUTO_INCREMENT,
     user_id VARCHAR(100) NOT NULL COMMENT '用户',
-    article_id INT  NOT NULL COMMENT '所属文章',
+    article_id INT NOT NULL COMMENT '所属文章',
     moment VARCHAR(100) NOT NULL COMMENT '时间',
     PRIMARY KEY ( id )
   );`
@@ -122,7 +146,7 @@ let comment =
     id INT NOT NULL AUTO_INCREMENT,
     user_id VARCHAR(100) NOT NULL COMMENT '用户',
     user_name VARCHAR(100) COMMENT '用户名称',
-    article_id INT  NOT NULL COMMENT '所属文章',
+    article_id INT NOT NULL COMMENT '所属文章',
     moment VARCHAR(100) NOT NULL COMMENT '时间',
     content VARCHAR(1000) NOT NULL COMMENT '内容',
     complaint INT DEFAULT 0 COMMENT '举报次数',
@@ -140,51 +164,51 @@ let label =
 
 let diary =
   `create table if not exists diary(
-   id INT NOT NULL AUTO_INCREMENT,
-   title VARCHAR(200) NOT NULL COMMENT '标题',
-   content VARCHAR(5000) NOT NULL COMMENT '内容',
-   picture VARCHAR(500) COMMENT '图片地址',
-   weather_id INT COMMENT '天气',
-   mood INT DEFAULT 0 COMMENT '心情',
-   moment VARCHAR(100) NOT NULL COMMENT '时间',
-   PRIMARY KEY ( id )
+    id INT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL COMMENT '标题',
+    content VARCHAR(5000) NOT NULL COMMENT '内容',
+    picture VARCHAR(500) COMMENT '图片地址',
+    weather_id INT COMMENT '天气',
+    mood INT DEFAULT 0 COMMENT '心情',
+    moment VARCHAR(100) NOT NULL COMMENT '时间',
+    PRIMARY KEY ( id )
   );`
 
 let weather =
   `create table if not exists weather(
-   id INT NOT NULL AUTO_INCREMENT,
-   weather_name VARCHAR(32) NOT NULL COMMENT '名称',
-   icon VARCHAR(100) COMMENT '图标',
-   PRIMARY KEY ( id )
+    id INT NOT NULL AUTO_INCREMENT,
+    weather_name VARCHAR(32) NOT NULL COMMENT '名称',
+    icon VARCHAR(100) COMMENT '图标',
+    PRIMARY KEY ( id )
   );`
 
 let message =
   `create table if not exists message(
-   id INT NOT NULL AUTO_INCREMENT,
-   user_id VARCHAR(100) NOT NULL COMMENT '用户',
-   user_name VARCHAR(100) COMMENT '用户名称',
-   moment VARCHAR(100) NOT NULL COMMENT '时间',
-   content VARCHAR(1000) NOT NULL COMMENT '内容',
-   isread INT DEFAULT 0 COMMENT '是否已读',
-   PRIMARY KEY ( id )
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id VARCHAR(100) NOT NULL COMMENT '用户',
+    user_name VARCHAR(100) COMMENT '用户名称',
+    moment VARCHAR(100) NOT NULL COMMENT '时间',
+    content VARCHAR(1000) NOT NULL COMMENT '内容',
+    isread INT DEFAULT 0 COMMENT '是否已读',
+    PRIMARY KEY ( id )
   );`
 
 let record =
   `create table if not exists record(
-   id INT NOT NULL AUTO_INCREMENT,
-   user_id VARCHAR(100) NOT NULL COMMENT '用户',
-   position VARCHAR(100) COMMENT '位置',
-   isread INT DEFAULT 0 COMMENT '设备',
-   moment VARCHAR(100) NOT NULL COMMENT '时间',
-   PRIMARY KEY ( id )
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id VARCHAR(100) NOT NULL COMMENT '用户',
+    position VARCHAR(100) COMMENT '位置',
+    isread INT DEFAULT 0 COMMENT '设备',
+    moment VARCHAR(100) NOT NULL COMMENT '时间',
+    PRIMARY KEY ( id )
   );`
 
-//创建数据表
+// 创建数据表
 const createTable = (sql) => {
   return query2(sql, [])
 }
 
-//先创建数据库再创建表
+// 先创建数据库再创建表
 async function create() {
   await createDatabase(reblog);
   createTable(users);
@@ -200,8 +224,8 @@ async function create() {
   createTable(record);
 }
 
-//开启连接数据库
-connection.connect();
-
+// 启动时初始化数据库
 create();
+
+// 导出
 exports.query2 = query2
